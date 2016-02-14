@@ -162,7 +162,7 @@ public override double ShouldAccept()
         return 0; \\skip this base
     return 1; \\attack this base
 }
-```c#
+```
 
 ## GetAvailableDeployElements
 
