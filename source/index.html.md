@@ -196,77 +196,15 @@ public override IEnumerable<int> AttackRoutine()
 ```c#
 public abstract class PluginBase
 {
-	protected PluginBase();
-
-	protected static bool AttackOnlyDeadBases { get; }
-	protected static bool TrophyPushMode { get; }
-	protected static int TrophyPushThDistanceLimit { get; }
-	protected static double WaveDelay { get; }
-    protected static int WaveSize { get; }
-    protected static int WaveTrapSize { get; }
-    protected static bool UseKing { get; }
-    protected static bool UseQueen { get; }
-    protected static bool UseWarden { get; }
-    protected static bool UseClanTroops { get; }
-	protected static bool SaveAttackAnalysisImage { get; }
-    protected static bool DisplayAttackAnalysisImage { get; }
-	protected List<Point> RedPoints { get; }
-	protected static int BottomEnd { get; }
-
-	protected struct ActiveSearch
-	{
-		public static bool NeedOnlyOneRequirementForAttack { get; }
-        public static int MinGold { get; }
-        public static int MinElixir { get; }
-        public static int MinDarkElixir { get; }
-        public static int MaxThLevel { get; }
-
-		public static bool MeetsRequirements(BaseStats baseStats);
-	}
-
-	protected struct DeadSearch
-    {
-		public static bool NeedOnlyOneRequirementForAttack { get; }
-        public static int MinGold { get; }
-        public static int MinElixir { get; }
-        public static int MinDarkElixir { get; }
-        public static int MaxThLevel { get; }
-
-        public static bool MeetsRequirements(BaseStats baseStats);
-	}
-
-	protected bool MeetsRequirements(BaseStats baseStats);
-	public static string ToUnitString(List<DeployElement> unitsCounts);
-    public static void OrderUnitsForDeploy(List<DeployElement> units);
-    protected static List<Point> GetPointsForLine(Point p1, Point p2, int count);
-    protected static List<Point> GetRectPoints(int pointsPerSide);
-    protected static Point[] GetStorageAttackPoints(List<Point> redLinePoints);
-    protected static void ExtractHeroes(List<DeployElement> units, List<DeployElement> heroes);
-    protected static IEnumerable<int> DeployHeroes(List<DeployElement> heroes, IEnumerable<Point> deployPoints, bool activateHeroAbilities = true);
-    protected internal static void TryActivateHeroAbilities(List<DeployElement> heroes, bool forceActivate = false);
-    protected internal static IEnumerable<int> SurrenderDeployMethod();
-    protected internal static void Surrender();
-    protected internal static bool SurrenderIfWeHaveAStar();
-    protected internal static bool HaveAStar();
-    public static Point[] GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis trophyPushAnalysis);
-    protected static void DrawAnalysis(List<Point> deployPoints, List<Point> redLinePoints);
-    protected static List<DeployElement> GetAvailableDeployElements();
-    protected static Tuple<Point, Point>[] GenerateDeployLinesFromSettings();
-    protected static bool AreTroopSetsDifferent(List<DeployElement> a, List<DeployElement> b);
-    protected static void ClickAlongLine(Point p1, Point p2, int count, int sleepTime);
-    protected static TrophyPushOpponentAnalysis CheckForTownhallNearBorder();
-    public static IEnumerable<int> GenerateDeployPointsFromMines(List<Point> deployPoints, IEnumerable<Point> redLinePoints = null, List<Rectangle> detectedMines = null);
-    public static IEnumerable<int> GenerateDeployPointsFromMinesToMilk(List<Point> deployPoints, List<Point> redLinePoints, List<Rectangle> detectedMines, bool fullGold = false, bool fullElixir = false, bool fullDelixir = false);
-    public static int GetOutsideCollectorCount(List<Point> redLinePoints);
-    public static ResourcesFull GetResourcesState();
-    public static int[] GetAttackResources();
-    public static IEnumerable<int> DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0);
-    public static IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint = 6, int clickDelay = 0, int cycleDelay = 0);
-    public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
+	// [...]
 }
 ```
 
 ## PluginBase Constructors
+
+```c#
+protected PluginBase();
+```
 
 Name | Description
 ---- | -----------
@@ -291,9 +229,33 @@ DisplayAttackAnalysisImage | bool | Gets the user's setting for displaying an at
 RedPoints | List&lt;Point&gt; | Gets a list of coordinates for the red border around a base
 BottomEnd | int | 
 
+```c#
+protected static bool AttackOnlyDeadBases { get; }
+protected static bool TrophyPushMode { get; }
+protected static int TrophyPushThDistanceLimit { get; }
+protected static double WaveDelay { get; }
+protected static int WaveSize { get; }
+protected static int WaveTrapSize { get; }
+protected static bool UseKing { get; }
+protected static bool UseQueen { get; }
+protected static bool UseWarden { get; }
+protected static bool UseClanTroops { get; }
+protected static bool SaveAttackAnalysisImage { get; }
+protected static bool DisplayAttackAnalysisImage { get; }
+protected List<Point> RedPoints { get; }
+protected static int BottomEnd { get; }
+```
+
 ## PluginBase Structures
 
 ### ActiveSearch Structure
+
+```c#
+protected struct ActiveSearch
+{
+	// [...]
+}
+```
 
 #### ActiveSearch Properties
 
@@ -305,13 +267,32 @@ MinElixir | int | Gets the user's setting for the minimum elixir requirement for
 MinDarkElixir | int | Gets the user's setting for the minimum dark elixir requirement for active bases
 MaxThLevel | int | Gets the user's setting for the maximum townhall level requirement for active bases
 
+```c#
+public static bool NeedOnlyOneRequirementForAttack { get; }
+public static int MinGold { get; }
+public static int MinElixir { get; }
+public static int MinDarkElixir { get; }
+public static int MaxThLevel { get; }
+```
+
 #### ActiveSearch Methods
 
 Method | Returns | Description
 ------ | ------- | -----------
 MeetsRequirements(BaseStats) | bool | Determines if the current base meets the active base requirements
 
+```c#
+public static bool MeetsRequirements(BaseStats baseStats);
+```
+
 ### DeadSearch Structure
+
+```c#
+protected struct DeadSearch
+{
+	// [...]
+}
+```
 
 #### DeadSearch Properties
 
@@ -323,13 +304,32 @@ MinElixir | int | Gets the user's setting for the minimum elixir requirement for
 MinDarkElixir | int | Gets the user's setting for the minimum dark elixir requirement for dead bases
 MaxThLevel | int | Gets the user's setting for the maximum townhall level requirement for dead bases
 
+```c#
+public static bool NeedOnlyOneRequirementForAttack { get; }
+public static int MinGold { get; }
+public static int MinElixir { get; }
+public static int MinDarkElixir { get; }
+public static int MaxThLevel { get; }
+```
+
 #### DeadSearch Methods
 
 Method | Returns | Description
 ------ | ------- | -----------
 MeetsRequirements(BaseStats) | bool | Determines if the current base meets the dead base requirements
 
+```c#
+public static bool MeetsRequirements(BaseStats baseStats);
+```
+
 ### DeployElementType Structure
+
+```c#
+protected struct DeployElementType
+{
+	// [...]
+}
+```
 
 #### DeployElementType Properties
 
@@ -342,7 +342,23 @@ HeroWarden | DeployElementType | Gets the DeployElementType enum for HeroWarden
 Spell | DeployElementType | Gets the DeployElementType enum for Spell
 ClanTroops | DeployElementType | Gets the DeployElementType enum for ClanTroops
 
+```c#
+public static Helpers.DeployElementType NormalUnit { get; }
+public static Helpers.DeployElementType HeroKing { get; }
+public static Helpers.DeployElementType HeroQueen { get; }
+public static Helpers.DeployElementType HeroWarden { get; }
+public static Helpers.DeployElementType Spell { get; }
+public static Helpers.DeployElementType ClanTroops { get; }
+```
+
 ### DeployPointA Structure
+
+```c#
+protected struct DeployPointA
+{
+	// [...]
+}
+```
 
 #### DeployPointA Properties
 
@@ -352,6 +368,13 @@ Top | Point | Gets the deploy point for the top of the base
 Left | Point | Gets the deploy point for the left of the base
 Right | Point | Gets the deploy point for the right of the base
 Bottom | Point | Gets the deploy point for the bottom of the base
+
+```c#
+public static Point Top { get { return DeployHelper.DeployPointATop; } }
+public static Point Left { get { return DeployHelper.DeployPointALeft; } }
+public static Point Right { get { return DeployHelper.DeployPointARight; } }
+public static Point Bottom { get { return DeployHelper.DeployPointABottom; } }
+```
 
 ## PluginBase Methods
 
@@ -385,6 +408,37 @@ GetAttackResources() | int[] |
 DeployUnits(DeployElement[], Point[], int, int, int, int) | IEnumerable&lt;int&gt; |
 DeployUnitsPerPoint(DeployElement[], Point[], int, int, int) | IEnumerable&lt;int&gt; |
 WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
+
+```c#
+protected bool MeetsRequirements(BaseStats baseStats);
+public static string ToUnitString(List<DeployElement> unitsCounts);
+public static void OrderUnitsForDeploy(List<DeployElement> units);
+protected static List<Point> GetPointsForLine(Point p1, Point p2, int count);
+protected static List<Point> GetRectPoints(int pointsPerSide);
+protected static Point[] GetStorageAttackPoints(List<Point> redLinePoints);
+protected static void ExtractHeroes(List<DeployElement> units, List<DeployElement> heroes);
+protected static IEnumerable<int> DeployHeroes(List<DeployElement> heroes, IEnumerable<Point> deployPoints, bool activateHeroAbilities = true);
+protected internal static void TryActivateHeroAbilities(List<DeployElement> heroes, bool forceActivate = false);
+protected internal static IEnumerable<int> SurrenderDeployMethod();
+protected internal static void Surrender();
+protected internal static bool SurrenderIfWeHaveAStar();
+protected internal static bool HaveAStar();
+public static Point[] GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis trophyPushAnalysis);
+protected static void DrawAnalysis(List<Point> deployPoints, List<Point> redLinePoints);
+protected static List<DeployElement> GetAvailableDeployElements();
+protected static Tuple<Point, Point>[] GenerateDeployLinesFromSettings();
+protected static bool AreTroopSetsDifferent(List<DeployElement> a, List<DeployElement> b);
+protected static void ClickAlongLine(Point p1, Point p2, int count, int sleepTime);
+protected static TrophyPushOpponentAnalysis CheckForTownhallNearBorder();
+public static IEnumerable<int> GenerateDeployPointsFromMines(List<Point> deployPoints, IEnumerable<Point> redLinePoints = null, List<Rectangle> detectedMines = null);
+public static IEnumerable<int> GenerateDeployPointsFromMinesToMilk(List<Point> deployPoints, List<Point> redLinePoints, List<Rectangle> detectedMines, bool fullGold = false, bool fullElixir = false, bool fullDelixir = false);
+public static int GetOutsideCollectorCount(List<Point> redLinePoints);
+public static ResourcesFull GetResourcesState();
+public static int[] GetAttackResources();
+public static IEnumerable<int> DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0);
+public static IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint = 6, int clickDelay = 0, int cycleDelay = 0);
+public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
+```
 
 # BaseAttack Class
 
