@@ -93,7 +93,7 @@ This returns the name of your deployment. This is used to display the name that 
 ```c#
 public override string ToString()
 {
-return "My deploy algorithm"
+	return "My deploy algorithm"
 }
 ```
 
@@ -114,30 +114,30 @@ This is your actual attack / deploy phase. It returns an int which is the number
 [assembly: Addon("My Addon", "This is a sample addon", "BoostBotTeam")]
 namespace MyDeploy
 {
-[AttackAlgorithm("My Algorithm", "Deploys units in a smiley face pattern.")]
-public class MyAlgorithm : BaseAttack
-{
-	public MyAlgorithm(BaseStats baseStats) : base(baseStats)
+	[AttackAlgorithm("My Algorithm", "Deploys units in a smiley face pattern.")]
+	public class MyAlgorithm : BaseAttack
 	{
-	}
+		public MyAlgorithm(BaseStats baseStats) : base(baseStats)
+		{
+		}
 
-	public override string ToString()
-	{
-		return "My deploy algorithm";
-	}
+		public override string ToString()
+		{
+			return "My deploy algorithm";
+		}
 
-	public override double ShouldAccept()
-	{
-		if (!MeetsRequirements(BaseStats))
-			return 0;
-		return 1;
-	}
+		public override double ShouldAccept()
+		{
+			if (!MeetsRequirements(BaseStats))
+				return 0;
+			return 1;
+		}
 
-	public override IEnumerable<int> AttackRoutine()
-	{
-		yield return 100;
+		public override IEnumerable<int> AttackRoutine()
+		{
+			yield return 100;
+		}
 	}
-}
 }
 ```
 
@@ -159,8 +159,8 @@ BaseStats | An object with the stats of the current enemy base. This is passed t
 public override double ShouldAccept()
 {
 if (!MeetsRequirements(BaseStats))
-	return 0; \\skip this base
-return 1; \\attack this base
+	return 0; //skip this base
+return 1; //attack this base
 }
 ```
 
@@ -287,7 +287,6 @@ Method | Returns | Description
 MeetsRequirements(BaseStats baseStats) | bool | Determines if the current base meets the requirements based on if it is considered dead or alive
 ToUnitString(List&lt;DeployElement&gt; unitCounts) | string | Returns a string with the name and count of each unit
 OrderUnitsForDeploy(List&lt;DeployElement&gt; units) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
-GetRedPoints() | List&lt;Point&gt; | Returns a list of points that follow the red border of the current enemy base
 GetPointsForLine(Point p1, Point p2, int count) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
 GetRectPoints(int pointsPerSide) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current enemy base
 GetStorageAttackPoints(List&lt;Point&gt; redLinePoints) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
@@ -313,6 +312,37 @@ GetAttackResources() | int[] |
 DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay, int waveCount, int waveDelay, int firstCycleDelay) | IEnumerable&lt;int&gt; |
 DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint, int clickDelay, int cycleDelay) | IEnumerable&lt;int&gt; |
 WaitForNoResourceChange(double seconds) | IEnumerable&lt;int&gt; |
+
+```c#
+	bool MeetsRequirements(BaseStats baseStats)
+	string ToUnitString(List<DeployElement> unitsCounts)
+	void OrderUnitsForDeploy(List<DeployElement> units)
+	List<Point> GetPointsForLine(Point p1, Point p2, int count)
+	List<Point> GetRectPoints(int pointsPerSide)
+	Point[] GetStorageAttackPoints(List<Point> redLinePoints)
+	void ExtractHeroes(List<DeployElement> units, List<DeployElement> heroes)
+	IEnumerable<int> DeployHeroes(List<DeployElement> heroes, IEnumerable<Point> deployPoints, bool activateHeroAbilities = true)
+	void TryActivateHeroAbilities(List<DeployElement> heroes, bool forceActivate = false)
+	IEnumerable<int> SurrenderDeployMethod()
+	void Surrender()
+	bool SurrenderIfWeHaveAStar()
+	bool HaveAStar()
+	Point[] GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis trophyPushAnalysis)
+	void DrawAnalysis(List<Point> deployPoints, List<Point> redLinePoints)
+	List<DeployElement> GetAvailableDeployElements()
+	Tuple<Point, Point>[] GenerateDeployLinesFromSettings()
+	bool AreTroopSetsDifferent(List<DeployElement> a, List<DeployElement> b)
+	void ClickAlongLine(Point p1, Point p2, int count, int sleepTime)
+	TrophyPushOpponentAnalysis CheckForTownhallNearBorder()
+	IEnumerable<int> GenerateDeployPointsFromMines(List<Point> deployPoints,IEnumerable<Point> redLinePoints = null, List<Rectangle> detectedMines = null)
+	IEnumerable<int> GenerateDeployPointsFromMinesToMilk(List<Point> deployPoints, List<Point> redLinePoints, List<Rectangle> detectedMines, bool fullGold = false, bool fullElixir = false, bool fullDelixir = false)
+	int GetOutsideCollectorCount(List<Point> redLinePoints)
+	ResourcesFull GetResourcesState()
+	int[] GetAttackResources()
+	IEnumerable<int> DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0)
+	IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint = 6, int clickDelay = 0, int cycleDelay = 0)
+	IEnumerable<int> WaitForNoResourceChange(double seconds = 3)
+```
 
 # BaseAttack Class
 
