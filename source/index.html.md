@@ -153,7 +153,7 @@ This method is used to check if the base the bot is currently on meets the requi
 
 Parameter | Description
 --------- | -----------
-BaseStats | An object with the stats of the current enemy base. This is passed to your algorithm in the constuctor.
+BaseStats | An object with the stats of the current target's base. This is passed to your algorithm in the constuctor.
 
 ```c#
 public override double ShouldAccept()
@@ -189,15 +189,10 @@ public override IEnumerable<int> AttackRoutine()
 }
 ```
 
-
-
 # PluginBase Class
 
 ```c#
 public abstract class PluginBase
-{
-	// [...]
-}
 ```
 
 ## PluginBase Constructors
@@ -212,8 +207,8 @@ PluginBase() | Initializes a new instance of the PluginBase class
 
 ## PluginBase Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 AttackOnlyDeadBases | bool | Gets the user's attack setting for attack only dead bases
 TrophyPushMode | bool | Gets the user's setting for trophy push mode
 TrophyPushThDistanceLimit | int |  Gets the user's setting for trophy push max townhall distance to border
@@ -252,15 +247,12 @@ protected static int BottomEnd { get; }
 
 ```c#
 protected struct ActiveSearch
-{
-	// [...]
-}
 ```
 
 #### ActiveSearch Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 NeedOnlyOneRequirementForAttack | bool | Gets the user's setting for meet only one requirement for active bases
 MinGold | int | Gets the user's setting for the minimum gold requirement for active bases
 MinElixir | int | Gets the user's setting for the minimum elixir requirement for active bases
@@ -277,8 +269,8 @@ public static int MaxThLevel { get; }
 
 #### ActiveSearch Methods
 
-Method | Returns | Description
------- | ------- | -----------
+Name | Returns | Description
+---- | ------- | -----------
 MeetsRequirements(BaseStats) | bool | Determines if the current base meets the active base requirements
 
 ```c#
@@ -289,15 +281,12 @@ public static bool MeetsRequirements(BaseStats baseStats);
 
 ```c#
 protected struct DeadSearch
-{
-	// [...]
-}
 ```
 
 #### DeadSearch Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 NeedOnlyOneRequirementForAttack | bool | Gets the user's setting for meet only one requirement for dead bases
 MinGold | int | Gets the user's setting for the minimum gold requirement for dead bases
 MinElixir | int | Gets the user's setting for the minimum elixir requirement for dead bases
@@ -314,8 +303,8 @@ public static int MaxThLevel { get; }
 
 #### DeadSearch Methods
 
-Method | Returns | Description
------- | ------- | -----------
+Name | Returns | Description
+---- | ------- | -----------
 MeetsRequirements(BaseStats) | bool | Determines if the current base meets the dead base requirements
 
 ```c#
@@ -326,15 +315,12 @@ public static bool MeetsRequirements(BaseStats baseStats);
 
 ```c#
 protected struct DeployElementType
-{
-	// [...]
-}
 ```
 
 #### DeployElementType Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 NormalUnit | DeployElementType | Gets the DeployElementType enum for NormalUnit
 HeroKing | DeployElementType | Gets the DeployElementType enum for HeroKing
 HeroQueen | DeployElementType | Gets the DeployElementType enum for HeroQueen
@@ -355,36 +341,33 @@ public static Helpers.DeployElementType ClanTroops { get; }
 
 ```c#
 protected struct DeployPointA
-{
-	// [...]
-}
 ```
 
 #### DeployPointA Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 Top | Point | Gets the deploy point for the top of the base
 Left | Point | Gets the deploy point for the left of the base
 Right | Point | Gets the deploy point for the right of the base
 Bottom | Point | Gets the deploy point for the bottom of the base
 
 ```c#
-public static Point Top { get { return DeployHelper.DeployPointATop; } }
-public static Point Left { get { return DeployHelper.DeployPointALeft; } }
-public static Point Right { get { return DeployHelper.DeployPointARight; } }
-public static Point Bottom { get { return DeployHelper.DeployPointABottom; } }
+public static Point Top { get; }
+public static Point Left { get; }
+public static Point Right { get; }
+public static Point Bottom { get; }
 ```
 
 ## PluginBase Methods
 
-Method | Returns | Description
------- | ------- | -----------
+Name | Returns | Description
+---- | ------- | -----------
 MeetsRequirements(BaseStats baseStats) | bool | Determines if the current base meets the requirements based on if it is considered dead or alive
 ToUnitString(List&lt;DeployElement&gt;) | string | Returns a string with the name and count of each unit
 OrderUnitsForDeploy(List&lt;DeployElement&gt;) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
 GetPointsForLine(Point, Point, int) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
-GetRectPoints(int) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current enemy base
+GetRectPoints(int) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current target's base
 GetStorageAttackPoints(List&lt;Point&gt;) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
 ExtractHeroes(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
 DeployHeroes(List&lt;DeployElement&gt;, IEnumerable&lt;Point&gt;,bool) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
@@ -442,13 +425,143 @@ public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
 
 # BaseAttack Class
 
+Your attack algorithm class must implement the `BaseAttack` class.
+
+```c#
+public abstract class BaseAttack : PluginBase, IOpponentSelector, IAttackStrategy
+```
+
+# BaseAttack Constructors
+
+Name | Description
+---- | -----------
+BaseAttack(BaseStats) | 
+
+```c#
+protected BaseAttack(BaseStats baseStats);
+```
+
+## BaseAttack Fields
+
+Name | Type | Description
+---- | ---- | -----------
+BaseStats | BaseStats | Holds the stats for the current target's base
+
+```c#
+protected BaseStats BaseStats;
+```
+
+## BaseAttack Methods
+
+Name | Returns | Description
+---- | ------- | -----------
+ShouldAccept() | double | Determines if the attack algorithm is a good match for the current target's base using a range from 0 to 1
+AttackRoutine() | IEnumerable&lt;int&gt; | Attack routine used on the target's base
+
+```c#
+public abstract double ShouldAccept();
+public abstract IEnumerable<int> AttackRoutine();
+```
+
 # BaseStats Class
+
+The `BaseStats` class is used to hold information about the target's base.
+
+```c#
+public class BaseStats
+```
+
+## BaseStats Constuctors
+
+Name | Description
+---- | -----------
+BaseStats(int) | 
+
+```c#
+public static BaseStats CreateBaseStats(int baseDisplayCount);
+```
 
 ## BaseStats Properties
 
+Name | Type | Description
+---- | ---- | -----------
+BaseDisplayCount | int | 
+Gold | int | Gets or sets the amount of gold available in the current target's base
+Elixir | int | Gets or sets the amount of elixir available in the current target's base
+DarkElixir | int | Gets or sets the amount of dark elixir available in the current target's base
+Trophies | int | Gets or sets the trophy count of the current target's base
+Th | int | Gets or sets the townhall level of the current target's base
+IsDead | bool | Gets or sets if the current target's base is dead
+IsStrongBase | bool | Determines if the current target's base is strong based on user settings
+
+```c#
+public int BaseDisplayCount { get; private set; }
+public int Gold { get; private set; }
+public int Elixir { get; private set; }
+public int DarkElixir { get; private set; }
+public int Trophies { get; private set; }
+public int Th { get; private set; }
+public bool IsDead { get; private set; }
+public bool IsStrongBase {  get; }
+```
+
+## BaseStats Methods
+
+Name | Returns | Description
+---- | ------- | -----------
+CreateBaseStats(int) | BaseStats | Returns base stats for the current target's base
+ShouldAcceptCurrentOpponent_StrongBaseCheck() | AttackModule.AcceptOpponentResult | Determines if the current target's base should be accepted based on the user's strong base settings
+
+```c#
+public static BaseStats CreateBaseStats(int baseDisplayCount);
+static AttackModule.AcceptOpponentResult ShouldAcceptCurrentOpponent_StrongBaseCheck();
+```
+
 # InitialAttack Class
 
+```c#
+internal class InitialAttack : BaseAttack
+```
+
+## InitalAttack Constuctor
+
+Name | Description
+---- | -----------
+InitialAttack(BaseStats) | 
+
+```c#
+public InitialAttack(BaseStats baseStats);
+```
+
 ## InitalAttack Methods
+
+Name | Returns | Description
+---- | ------- | -----------
+ShouldAccept() | double | Not implemented
+AttackRoutine() | IEnumerable&lt;int&gt; | Deploys an initial attack based on the user's settings
+
+```c#
+public override double ShouldAccept();
+public override IEnumerable<int> AttackRoutine()
+```
+
+## InitialAttack Example
+
+```c#
+// your algorithm's attack routine
+public override IEnumerable<int> AttackRoutine()
+{
+	// create an initial attack class with the current target's base stats
+	var clearWave = new InitialAttack(BaseStats);
+
+	// deploy the initial attack wave
+	foreach(var t in clearWave.AttackRoutine())
+		yield return t;
+
+	// continue with your algorithm
+	// [...]
+}
+```
 
 # AttackHelper Class
 
@@ -464,8 +577,8 @@ public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
 
 ## DeployElement Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 Name | string | The name used to identify the element
 Rect | Rectangle | The rectangle outlining the location of the unit on the screen.
 Count | int | The number of available elements
@@ -476,16 +589,16 @@ IsHero | bool | Determines if the element is a hero.
 
 ## DeployElement Methods
 
-Method | Returns | Description
------- | ------- | -----------
+Name | Returns | Description
+---- | ------- | -----------
 Recount() | void | Recounts the Element
 
 # Unit Class
 
 ## Unit Properties
 
-Property | Type | Description
--------- | ---- | -----------
+Name | Type | Description
+---- | ---- | -----------
 AffectedTargets | AffectedTargets | Flags showing the Units favorite target: Ground, Air, Any, AirGround, Buildings, Walls, BuildingsWalls
 AmountPerPulse | int | 
 AttackSpeed | double | Unit attack speed
