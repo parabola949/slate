@@ -285,33 +285,33 @@ Bottom | Point | Gets the deploy point for the bottom of the base
 Method | Returns | Description
 ------ | ------- | -----------
 MeetsRequirements(BaseStats baseStats) | bool | Determines if the current base meets the requirements based on if it is considered dead or alive
-ToUnitString(List&lt;DeployElement&gt; unitCounts) | string | Returns a string with the name and count of each unit
-OrderUnitsForDeploy(List&lt;DeployElement&gt; units) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
-GetPointsForLine(Point p1, Point p2, int count) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
-GetRectPoints(int pointsPerSide) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current enemy base
-GetStorageAttackPoints(List&lt;Point&gt; redLinePoints) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
-ExtractHeroes(List&lt;DeployElement&gt; units, List&lt;DeployElement&gt; heroes) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
-DeployHeroes(List&lt;DeployElement&gt; heroes, IEnumerable&lt;Point&gt; deployPoints, bool activateHeroAbilities) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
-TryActivateHeroAbilities(List&lt;DeployElement&gt; heroes, bool forceActivate) | void |
+ToUnitString(List&lt;DeployElement&gt;) | string | Returns a string with the name and count of each unit
+OrderUnitsForDeploy(List&lt;DeployElement&gt;) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
+GetPointsForLine(Point,Point,int) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
+GetRectPoints(int) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current enemy base
+GetStorageAttackPoints(List&lt;Point&gt;) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
+ExtractHeroes(List&lt;DeployElement&gt;,List&lt;DeployElement&gt;) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
+DeployHeroes(List&lt;DeployElement&gt;,IEnumerable&lt;Point&gt;,bool) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
+TryActivateHeroAbilities(List&lt;DeployElement&gt;,bool) | void |
 SurrenderDeployMethod() | IEnumerable&lt;int&gt; |
 Surrender() | void |
 SurrenderIfWeHaveAStar() | bool |
 HaveAStar() | bool |
-GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis trophyPushAnalysis) | Point[] |
-DrawAnalysis(List&lt;Point&gt; deployPoints, List&lt;Point&gt; redLinePoints) | void |
+GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis) | Point[] |
+DrawAnalysis(List&lt;Point&gt;,List&lt;Point&gt;) | void |
 GetAvailableDeployElements() | List&lt;DeployElement&gt; |
 GenerateDeployLinesFromSettings() | Tuple&lt;Point, Point&gt;[] |
-AreTroopSetsDifferent(List&lt;DeployElement&gt; a, List&lt;DeployElement&gt; b) | bool |
-ClickAlongLine(Point p1, Point p2, int count, int sleepTime) | void |
+AreTroopSetsDifferent(List&lt;DeployElement&gt;,List&lt;DeployElement&gt;) | bool |
+ClickAlongLine(Point,Point,int,int) | void |
 CheckForTownhallNearBorder() | TrophyPushOpponentAnalysis |
-GenerateDeployPointsFromMines(List&lt;Point&gt; deployPoints, IEnumerable&lt;Point&gt; redLinePoints, List&lt;Rectangle&gt; detectedMines) | IEnumerable&lt;int&gt; |
-GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt; deployPoints, List&lt;Point&gt; redLinePoints, List&lt;Rectangle&gt; detectedMines, bool fullGold, bool fullElixir, bool fullDelixir) | IEnumerable&lt;int&gt; |
-GetOutsideCollectorCount(List&lt;Point&gt; redLinePoints) | int |
+GenerateDeployPointsFromMines(List&lt;Point&gt;,IEnumerable&lt;Point&gt;,List&lt;Rectangle&gt;) | IEnumerable&lt;int&gt; |
+GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt;,List&lt;Point&gt;,List&lt;Rectangle&gt;,bool,bool,bool) | IEnumerable&lt;int&gt; |
+GetOutsideCollectorCount(List&lt;Point&gt;) | int |
 GetResourcesState() | ResourcesFull |
 GetAttackResources() | int[] |
-DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay, int waveCount, int waveDelay, int firstCycleDelay) | IEnumerable&lt;int&gt; |
-DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint, int clickDelay, int cycleDelay) | IEnumerable&lt;int&gt; |
-WaitForNoResourceChange(double seconds) | IEnumerable&lt;int&gt; |
+DeployUnits(DeployElement[],Point[],int,int,int,int) | IEnumerable&lt;int&gt; |
+DeployUnitsPerPoint(DeployElement[],Point[],int,int,int) | IEnumerable&lt;int&gt; |
+WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
 
 ```c#
 	bool MeetsRequirements(BaseStats baseStats)
