@@ -158,9 +158,9 @@ BaseStats | An object with the stats of the current enemy base. This is passed t
 ```c#
 public override double ShouldAccept()
 {
-if (!MeetsRequirements(BaseStats))
-	return 0; //skip this base
-return 1; //attack this base
+	if (!MeetsRequirements(BaseStats))
+		return 0; //skip this base
+	return 1; //attack this base
 }
 ```
 
@@ -173,25 +173,98 @@ This method returns a list of the troops and spells currently available to deplo
 ```c#
 public override IEnumerable<int> AttackRoutine()
 {
-//get the deploy elements that have unit data
-var deployElements = GetAvailableDeployElements().Where(x => x.UnitData != null);
+	//get the deploy elements that have unit data
+	var deployElements = GetAvailableDeployElements().Where(x => x.UnitData != null);
 
-//get only the tank units from the deploy elements
-var tankUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Tank).ToArray();
+	//get only the tank units from the deploy elements
+	var tankUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Tank).ToArray();
 
-//get only the attacking units from the deploy elements
-var attackUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Damage).ToArray();
+	//get only the attacking units from the deploy elements
+	var attackUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Damage).ToArray();
 
-//get only the healing units from the deploy elements
-var healUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Heal).ToArray();
+	//get only the healing units from the deploy elements
+	var healUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Heal).ToArray();
 
-//TODO: deploy units to screen.
+	//TODO: deploy units to screen.
 }
 ```
 
 
 
 # PluginBase Class
+
+```c#
+public abstract class PluginBase
+{
+	protected PluginBase();
+
+	protected static bool AttackOnlyDeadBases { get; }
+	protected static bool TrophyPushMode { get; }
+	protected static int TrophyPushThDistanceLimit { get; }
+	protected static double WaveDelay { get; }
+    protected static int WaveSize { get; }
+    protected static int WaveTrapSize { get; }
+    protected static bool UseKing { get; }
+    protected static bool UseQueen { get; }
+    protected static bool UseWarden { get; }
+    protected static bool UseClanTroops { get; }
+	protected static bool SaveAttackAnalysisImage { get; }
+    protected static bool DisplayAttackAnalysisImage { get; }
+	protected List<Point> RedPoints { get; }
+	protected static int BottomEnd { get; }
+
+	protected struct ActiveSearch
+	{
+		public static bool NeedOnlyOneRequirementForAttack { get; }
+        public static int MinGold { get; }
+        public static int MinElixir { get; }
+        public static int MinDarkElixir { get; }
+        public static int MaxThLevel { get; }
+
+		public static bool MeetsRequirements(BaseStats baseStats);
+	}
+
+	protected struct DeadSearch
+    {
+		public static bool NeedOnlyOneRequirementForAttack { get; }
+        public static int MinGold { get; }
+        public static int MinElixir { get; }
+        public static int MinDarkElixir { get; }
+        public static int MaxThLevel { get; }
+
+        public static bool MeetsRequirements(BaseStats baseStats);
+	}
+
+	protected bool MeetsRequirements(BaseStats baseStats);
+	public static string ToUnitString(List<DeployElement> unitsCounts);
+    public static void OrderUnitsForDeploy(List<DeployElement> units);
+    protected static List<Point> GetPointsForLine(Point p1, Point p2, int count);
+    protected static List<Point> GetRectPoints(int pointsPerSide);
+    protected static Point[] GetStorageAttackPoints(List<Point> redLinePoints);
+    protected static void ExtractHeroes(List<DeployElement> units, List<DeployElement> heroes);
+    protected static IEnumerable<int> DeployHeroes(List<DeployElement> heroes, IEnumerable<Point> deployPoints, bool activateHeroAbilities = true);
+    protected internal static void TryActivateHeroAbilities(List<DeployElement> heroes, bool forceActivate = false);
+    protected internal static IEnumerable<int> SurrenderDeployMethod();
+    protected internal static void Surrender();
+    protected internal static bool SurrenderIfWeHaveAStar();
+    protected internal static bool HaveAStar();
+    public static Point[] GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis trophyPushAnalysis);
+    protected static void DrawAnalysis(List<Point> deployPoints, List<Point> redLinePoints);
+    protected static List<DeployElement> GetAvailableDeployElements();
+    protected static Tuple<Point, Point>[] GenerateDeployLinesFromSettings();
+    protected static bool AreTroopSetsDifferent(List<DeployElement> a, List<DeployElement> b);
+    protected static void ClickAlongLine(Point p1, Point p2, int count, int sleepTime);
+    protected static TrophyPushOpponentAnalysis CheckForTownhallNearBorder();
+    public static IEnumerable<int> GenerateDeployPointsFromMines(List<Point> deployPoints, IEnumerable<Point> redLinePoints = null, List<Rectangle> detectedMines = null);
+    public static IEnumerable<int> GenerateDeployPointsFromMinesToMilk(List<Point> deployPoints, List<Point> redLinePoints, List<Rectangle> detectedMines, bool fullGold = false, bool fullElixir = false, bool fullDelixir = false);
+    public static int GetOutsideCollectorCount(List<Point> redLinePoints);
+    public static ResourcesFull GetResourcesState();
+    public static int[] GetAttackResources();
+    public static IEnumerable<int> DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0);
+    public static IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint = 6, int clickDelay = 0, int cycleDelay = 0);
+    public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
+}
+```
 
 ## PluginBase Constructors
 
@@ -287,62 +360,31 @@ Method | Returns | Description
 MeetsRequirements(BaseStats baseStats) | bool | Determines if the current base meets the requirements based on if it is considered dead or alive
 ToUnitString(List&lt;DeployElement&gt;) | string | Returns a string with the name and count of each unit
 OrderUnitsForDeploy(List&lt;DeployElement&gt;) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
-GetPointsForLine(Point,Point,int) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
+GetPointsForLine(Point, Point, int) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
 GetRectPoints(int) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current enemy base
 GetStorageAttackPoints(List&lt;Point&gt;) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
-ExtractHeroes(List&lt;DeployElement&gt;,List&lt;DeployElement&gt;) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
-DeployHeroes(List&lt;DeployElement&gt;,IEnumerable&lt;Point&gt;,bool) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
-TryActivateHeroAbilities(List&lt;DeployElement&gt;,bool) | void |
+ExtractHeroes(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
+DeployHeroes(List&lt;DeployElement&gt;, IEnumerable&lt;Point&gt;,bool) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
+TryActivateHeroAbilities(List&lt;DeployElement&gt;, bool) | void |
 SurrenderDeployMethod() | IEnumerable&lt;int&gt; |
 Surrender() | void |
 SurrenderIfWeHaveAStar() | bool |
 HaveAStar() | bool |
 GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis) | Point[] |
-DrawAnalysis(List&lt;Point&gt;,List&lt;Point&gt;) | void |
+DrawAnalysis(List&lt;Point&gt;, List&lt;Point&gt;) | void |
 GetAvailableDeployElements() | List&lt;DeployElement&gt; |
 GenerateDeployLinesFromSettings() | Tuple&lt;Point, Point&gt;[] |
-AreTroopSetsDifferent(List&lt;DeployElement&gt;,List&lt;DeployElement&gt;) | bool |
-ClickAlongLine(Point,Point,int,int) | void |
+AreTroopSetsDifferent(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | bool |
+ClickAlongLine(Point, Point, int, int) | void |
 CheckForTownhallNearBorder() | TrophyPushOpponentAnalysis |
-GenerateDeployPointsFromMines(List&lt;Point&gt;,IEnumerable&lt;Point&gt;,List&lt;Rectangle&gt;) | IEnumerable&lt;int&gt; |
-GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt;,List&lt;Point&gt;,List&lt;Rectangle&gt;,bool,bool,bool) | IEnumerable&lt;int&gt; |
+GenerateDeployPointsFromMines(List&lt;Point&gt;, IEnumerable&lt;Point&gt;, List&lt;Rectangle&gt;) | IEnumerable&lt;int&gt; |
+GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt;, List&lt;Point&gt;, List&lt;Rectangle&gt;, bool, bool, bool) | IEnumerable&lt;int&gt; |
 GetOutsideCollectorCount(List&lt;Point&gt;) | int |
 GetResourcesState() | ResourcesFull |
 GetAttackResources() | int[] |
-DeployUnits(DeployElement[],Point[],int,int,int,int) | IEnumerable&lt;int&gt; |
-DeployUnitsPerPoint(DeployElement[],Point[],int,int,int) | IEnumerable&lt;int&gt; |
+DeployUnits(DeployElement[], Point[], int, int, int, int) | IEnumerable&lt;int&gt; |
+DeployUnitsPerPoint(DeployElement[], Point[], int, int, int) | IEnumerable&lt;int&gt; |
 WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
-
-```c#
-	bool MeetsRequirements(BaseStats baseStats)
-	string ToUnitString(List<DeployElement> unitsCounts)
-	void OrderUnitsForDeploy(List<DeployElement> units)
-	List<Point> GetPointsForLine(Point p1, Point p2, int count)
-	List<Point> GetRectPoints(int pointsPerSide)
-	Point[] GetStorageAttackPoints(List<Point> redLinePoints)
-	void ExtractHeroes(List<DeployElement> units, List<DeployElement> heroes)
-	IEnumerable<int> DeployHeroes(List<DeployElement> heroes, IEnumerable<Point> deployPoints, bool activateHeroAbilities = true)
-	void TryActivateHeroAbilities(List<DeployElement> heroes, bool forceActivate = false)
-	IEnumerable<int> SurrenderDeployMethod()
-	void Surrender()
-	bool SurrenderIfWeHaveAStar()
-	bool HaveAStar()
-	Point[] GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis trophyPushAnalysis)
-	void DrawAnalysis(List<Point> deployPoints, List<Point> redLinePoints)
-	List<DeployElement> GetAvailableDeployElements()
-	Tuple<Point, Point>[] GenerateDeployLinesFromSettings()
-	bool AreTroopSetsDifferent(List<DeployElement> a, List<DeployElement> b)
-	void ClickAlongLine(Point p1, Point p2, int count, int sleepTime)
-	TrophyPushOpponentAnalysis CheckForTownhallNearBorder()
-	IEnumerable<int> GenerateDeployPointsFromMines(List<Point> deployPoints,IEnumerable<Point> redLinePoints = null, List<Rectangle> detectedMines = null)
-	IEnumerable<int> GenerateDeployPointsFromMinesToMilk(List<Point> deployPoints, List<Point> redLinePoints, List<Rectangle> detectedMines, bool fullGold = false, bool fullElixir = false, bool fullDelixir = false)
-	int GetOutsideCollectorCount(List<Point> redLinePoints)
-	ResourcesFull GetResourcesState()
-	int[] GetAttackResources()
-	IEnumerable<int> DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0)
-	IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint = 6, int clickDelay = 0, int cycleDelay = 0)
-	IEnumerable<int> WaitForNoResourceChange(double seconds = 3)
-```
 
 # BaseAttack Class
 
