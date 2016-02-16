@@ -287,23 +287,6 @@ PluginBase() | Initializes a new instance of the PluginBase class
 
 ## PluginBase Properties
 
-Name | Type | Description
----- | ---- | -----------
-AttackOnlyDeadBases | bool | Gets the user's attack setting for attack only dead bases
-TrophyPushMode | bool | Gets the user's setting for trophy push mode
-TrophyPushThDistanceLimit | int |  Gets the user's setting for trophy push max townhall distance to border
-WaveDelay | double | Gets the user's setting for wave delay
-WaveSize | int | Gets the user's setting for wave size
-WaveTrapSize | int | Gets the user's setting for wave trap size
-UseKing | bool | Gets the user's setting for using the Barbarian King
-UseQueen | bool | Gets the user's setting for using the Archer Queen
-UseWarden | bool | Gets the user's settings for using the Grand Warden
-UseClanTroops | bool | Gets the user's settings for using clan troops
-SaveAttackAnalysisImage | bool | Gets the user's setting for saving an attack analysis image
-DisplayAttackAnalysisImage | bool | Gets the user's setting for displaying an attack analysis image
-RedPoints | List&lt;Point&gt; | Gets a list of coordinates for the red border around a base
-BottomEnd | int | 
-
 ```c#
 protected static bool AttackOnlyDeadBases { get; }
 protected static bool TrophyPushMode { get; }
@@ -320,6 +303,23 @@ protected static bool DisplayAttackAnalysisImage { get; }
 protected List<Point> RedPoints { get; }
 protected static int BottomEnd { get; }
 ```
+
+Name | Type | Description
+---- | ---- | -----------
+AttackOnlyDeadBases | bool | Gets the user's attack setting for attack only dead bases
+TrophyPushMode | bool | Gets the user's setting for trophy push mode
+TrophyPushThDistanceLimit | int |  Gets the user's setting for trophy push max townhall distance to border
+WaveDelay | double | Gets the user's setting for wave delay
+WaveSize | int | Gets the user's setting for wave size
+WaveTrapSize | int | Gets the user's setting for wave trap size
+UseKing | bool | Gets the user's setting for using the Barbarian King
+UseQueen | bool | Gets the user's setting for using the Archer Queen
+UseWarden | bool | Gets the user's settings for using the Grand Warden
+UseClanTroops | bool | Gets the user's settings for using clan troops
+SaveAttackAnalysisImage | bool | Gets the user's setting for saving an attack analysis image
+DisplayAttackAnalysisImage | bool | Gets the user's setting for displaying an attack analysis image
+RedPoints | List&lt;Point&gt; | Gets a list of coordinates for the red border around a base
+BottomEnd | int | 
 
 ## PluginBase Structures
 
