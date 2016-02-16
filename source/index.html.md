@@ -198,10 +198,10 @@ public override double ShouldAccept()
 ```c#
 public override IEnumerable<int> AttackRoutine()
 {
-	# get deployment points from the outer rectangle—15 points per side
+	> get deployment points from the outer rectangle—15 points per side
 	var deployPointsRect = GetRectPoints(15);
 
-	# get deploy points near the townhall if it is close to the edge
+	> get deploy points near the townhall if it is close to the edge
 	TrophyPushOpponentAnalysis trophyPushAnalysis = CheckForTownhallNearBorder();
     Point[] deployPointsNearTownhall = null;
 
@@ -210,7 +210,7 @@ public override IEnumerable<int> AttackRoutine()
         deployPointsNearTownhall = GetTrophyPushDeployPoints(trophyPushAnalysis);
     }
 
-	# get deploy points near collectors
+	> get deploy points near collectors
 	var deployPointsNearCollectors = new List<Point>();
 	var mineRects = new List<Rectangle>();
 
