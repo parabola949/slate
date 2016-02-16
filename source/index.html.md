@@ -198,10 +198,10 @@ public override double ShouldAccept()
 ```c#
 public override IEnumerable<int> AttackRoutine()
 {
-	// get 15 deploy points per side or 60 in total
+	# get deployment points from the outer rectangle—15 points per side
 	var deployPointsRect = GetRectPoints(15);
 
-	// get deploy points near the townhall if it is close to the edge
+	# get deploy points near the townhall if it is close to the edge
 	TrophyPushOpponentAnalysis trophyPushAnalysis = CheckForTownhallNearBorder();
     Point[] deployPointsNearTownhall = null;
 
@@ -210,7 +210,7 @@ public override IEnumerable<int> AttackRoutine()
         deployPointsNearTownhall = GetTrophyPushDeployPoints(trophyPushAnalysis);
     }
 
-	// get deploy points near collectors
+	# get deploy points near collectors
 	var deployPointsNearCollectors = new List<Point>();
 	var mineRects = new List<Rectangle>();
 
@@ -636,17 +636,23 @@ public override IEnumerable<int> AttackRoutine()
 
 # AttackHelper Class
 
-## AttackHelper Methods
+Under Construction
 
 # DeployHelper Class
 
-## DeployHelper Properties
-
-## DeployHelper Methods
+Under Construction
 
 # DeployElement Class
 
-## DeployElement Properties
+## DeployElement Fields
+
+```c#
+public string Name;
+public Rectangle Rect;
+public int Count;
+public Unit UnitData;
+public DeployElementType ElementType;
+```
 
 Name | Type | Description
 ---- | ---- | -----------
@@ -655,10 +661,24 @@ Rect | Rectangle | The rectangle outlining the location of the unit on the scree
 Count | int | The number of available elements
 UnitData | Unit | An object with information about the unit
 ElementType | DeployElementType | The type of element; Elements types are: NormalUnit, HeroKing, HeroQueen, HeroWarden, Spell, ClanTroops
+
+## DeployElement Properties
+
+```c#
+public bool IsRanged { get; }
+public bool IsHero { get; }
+```
+
+Name | Type | Description
+---- | ---- | -----------
 IsRanged | bool | Determines if the element is a ranged unit.
 IsHero | bool | Determines if the element is a hero.
 
 ## DeployElement Methods
+
+```c#
+public void Recount();
+```
 
 Name | Returns | Description
 ---- | ------- | -----------
@@ -666,7 +686,44 @@ Recount() | void | Recounts the Element
 
 # Unit Class
 
-## Unit Properties
+## Unit Fields
+
+```c#
+public AffectedTargets AffectedTargets;
+public int AmountPerPulse;
+public double AttackSpeed;
+public AttackType AttackType;
+public int BoostSeconds;
+public int BuildingLevelRequired;
+public BuildingType BuildingType;
+public int DamageIncreasePercentage;
+public int DarkElixirCost;
+public double DPS;
+public EffectType EffectType;
+public int ElixirCost;
+public int GoldCost;
+public int HousingSpace;
+public double HP;
+public int LaboratoryLevelRequired;
+public int Level;
+public double MovementSpeed;
+public string Name;
+public string NameSimple;
+public int NumberOfPulses;
+public double RandomRange;
+public double Range;
+public int ResearchCost;
+public double SecondsBetweenPulses;
+public int SpeedIncreasePercentage;
+public double SpellDurationSeconds;
+public SpellType SpellType;
+public double SplashRange;
+public TargetType TargetType;
+public Point TrainingButton;
+public double TrainingTime;
+public ItemType Type;
+public UnitType UnitType;
+```
 
 Name | Type | Description
 ---- | ---- | -----------
