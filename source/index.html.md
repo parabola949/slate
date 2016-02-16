@@ -327,9 +327,17 @@ protected static int BottomEnd { get; }
 
 ```c#
 protected struct ActiveSearch
-```
+{
+	public static bool NeedOnlyOneRequirementForAttack { get; }
+	public static int MinGold { get; }
+	public static int MinElixir { get; }
+	public static int MinDarkElixir { get; }
+	public static int MaxThLevel { get; }
 
-### ActiveSearch Properties
+	public static bool MeetsRequirements(BaseStats baseStats);
+}
+```
+#### ActiveSearch Properties
 
 Name | Type | Description
 ---- | ---- | -----------
@@ -339,23 +347,11 @@ MinElixir | int | Gets the user's setting for the minimum elixir requirement for
 MinDarkElixir | int | Gets the user's setting for the minimum dark elixir requirement for active bases
 MaxThLevel | int | Gets the user's setting for the maximum townhall level requirement for active bases
 
-```c#
-public static bool NeedOnlyOneRequirementForAttack { get; }
-public static int MinGold { get; }
-public static int MinElixir { get; }
-public static int MinDarkElixir { get; }
-public static int MaxThLevel { get; }
-```
-
-### ActiveSearch Methods
+#### ActiveSearch Methods
 
 Name | Returns | Description
 ---- | ------- | -----------
 MeetsRequirements(BaseStats) | bool | Determines if the current base meets the active base requirements
-
-```c#
-public static bool MeetsRequirements(BaseStats baseStats);
-```
 
 ### DeadSearch Structure
 
