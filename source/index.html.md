@@ -8,7 +8,6 @@ toc_footers:
 - <a href='https://boostbot.org'>For use with Boostbot</a>
 
 includes:
-- errors
 
 search: true
 ---
@@ -237,25 +236,21 @@ Deploy points are needed to figure out where to place your troops. In the code s
 The `RedPoints` property will get a list with all points the go around the target's base following the red line.
 
 ### Getting Units
+
+> get the deployelements and break them up into groups to use for deployment
 	
 ```c#
-public override IEnumerable<int> AttackRoutine()
-{
-	//get the deploy elements that have unit data
-	var deployElements = GetAvailableDeployElements().Where(x => x.UnitData != null);
+//get the deploy elements that have unit data
+var deployElements = GetAvailableDeployElements().Where(x => x.UnitData != null);
 
-	//get only the tank units from the deploy elements
-	var tankUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Tank).ToArray();
+//get only the tank units from the deploy elements
+var tankUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Tank).ToArray();
 
-	//get only the attacking units from the deploy elements
-	var attackUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Damage).ToArray();
+//get only the attacking units from the deploy elements
+var attackUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Damage).ToArray();
 
-	//get only the healing units from the deploy elements
-	var healUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Heal).ToArray();
-
-	// deploy units to screen.
-	// [...]
-}
+//get only the healing units from the deploy elements
+var healUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Heal).ToArray();
 ```
 
 `GetAvailableDeployElements` returns a list of the troops and spells currently available to deploy using the DeployElement object. You can use `linq` to filter this list into certain troops.
@@ -781,5 +776,3 @@ TrainingButton | Point | Location of the training button on the screen
 TrainingTime | double | Length of time to train
 Type | ItemType | Type of item: Unit, Spell
 UnitType | UnitType | Type of unit: Ground, Air
-
-
