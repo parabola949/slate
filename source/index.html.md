@@ -123,18 +123,21 @@ namespace MyDeploy
 
 		public override string ToString()
 		{
+			// name of your algorithm that appears on the attack tab
 			return "My deploy algorithm";
 		}
 
 		public override double ShouldAccept()
 		{
 			if (!MeetsRequirements(BaseStats))
-				return 0;
-			return 1;
+				return 0; // skip this base
+			return 1; // attack this base
 		}
 
 		public override IEnumerable<int> AttackRoutine()
 		{
+			// routine to deploy troops here
+			// [...]
 			yield return 100;
 		}
 	}
@@ -145,11 +148,15 @@ namespace MyDeploy
 
 Use these methods to get started with an attack.
 
-## MeetsRequirements
+## Checking a Base
 
-<code>protected bool MeetsRequirements(BaseStats baseStats)</code>
+### Using MeetsRequirements
 
-This method is used to check if the base the bot is currently on meets the requirements set by the user on the "Attack" tab. Use it in the <code>ShouldAccept</code> method.
+```c#
+protected bool MeetsRequirements(BaseStats baseStats);
+```
+
+This method is used to check if the base the bot is currently on meets the requirements set by the user on the "Attack" tab. Use it in the `ShouldAccept` method.
 
 Parameter | Description
 --------- | -----------
@@ -164,11 +171,79 @@ public override double ShouldAccept()
 }
 ```
 
-## GetAvailableDeployElements
+#### Expanded Example
 
-<code>public static List&lt;DeployElement&gt; GetAvailableDeployElements()</code>
+This is the `ShouldAccept` method for the milking algorithm. After checking if the base meets the user's requirements, it performans another check to make sure there are atleast two collectors outside the walls.
 
-This method returns a list of the troops and spells currently available to deploy using the DeployElement object. Use it in the <code>AttackRoutine</code> method.
+```c#
+public override double ShouldAccept()
+{
+	// check if the target's base meets the user's settings
+    if (!MeetsRequirements(BaseStats))
+        return 0; // skip this base
+
+	// get a count of collectors outside the walls
+    var outsideCollectorsCount = GetOutsideCollectorCount(RedPoints);
+
+	// check if there are more than two collectors outside the wall
+    if (outsideCollectorsCount < 2)
+        return 0; // skip this base
+
+    return 1; // accept this base
+}
+```
+
+## Getting Deploy Points
+
+Deploy points are needed to figure out where to place your troops.
+
+### Using RedPoints
+
+The `RedPoints` property will get a list with all points the go around the target's base following the red line.
+
+### Example Methods
+
+Here are some examples of how to get deploy points. More methods can be found in the `PluginBase` and `DeployHelper` class documentation.
+
+```c#
+public override IEnumerable<int> AttackRoutine()
+{
+	// get 15 deploy points per side or 60 in total
+	var deployPointsRect = GetRectPoints(15);
+
+	// get deploy points near the townhall if it is close to the edge
+	TrophyPushOpponentAnalysis trophyPushAnalysis = CheckForTownhallNearBorder();
+    Point[] deployPointsNearTownhall = null;
+
+    if (IsTownhallNearBorder(trophyPushAnalysis))
+    {
+        deployPointsNearTownhall = GetTrophyPushDeployPoints(trophyPushAnalysis);
+    }
+
+	// get deploy points near collectors
+	var deployPointsNearCollectors = new List<Point>();
+	var mineRects = new List<Rectangle>();
+
+	foreach(var t in GenerateDeployPointsFromMines(deployPointsNearCollectors, RedPoints, , mineRects))
+		yield return t; // wait until function finishes
+
+	// get troops
+	// [...]
+
+	// deploy troops
+	// [...]
+}
+```
+
+## Getting Units
+
+### Using GetAvailableDeployElements
+
+```c#
+public static List<DeployElement> GetAvailableDeployElements();
+```
+
+This method returns a list of the troops and spells currently available to deploy using the DeployElement object. Use it in the `AttackRoutine` method.
 
 ```c#
 public override IEnumerable<int> AttackRoutine()
@@ -185,9 +260,14 @@ public override IEnumerable<int> AttackRoutine()
 	//get only the healing units from the deploy elements
 	var healUnits = deployElements.Where(x => x.ElementType == DeployElementType.NormalUnit && x.UnitData.AttackType == AttackType.Heal).ToArray();
 
-	//TODO: deploy units to screen.
+	// deploy units to screen.
+	// [...]
 }
 ```
+
+## Deploying units
+
+
 
 # PluginBase Class
 
@@ -388,7 +468,7 @@ GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt;, List&lt;Point&gt;, List&l
 GetOutsideCollectorCount(List&lt;Point&gt;) | int |
 GetResourcesState() | ResourcesFull |
 GetAttackResources() | int[] |
-DeployUnits(DeployElement[], Point[], int, int, int, int) | IEnumerable&lt;int&gt; |
+DeployUnitsInWaves(DeployElement[], Point[], int, int, int, int) | IEnumerable&lt;int&gt; |
 DeployUnitsPerPoint(DeployElement[], Point[], int, int, int) | IEnumerable&lt;int&gt; |
 WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
 
@@ -418,7 +498,7 @@ public static IEnumerable<int> GenerateDeployPointsFromMinesToMilk(List<Point> d
 public static int GetOutsideCollectorCount(List<Point> redLinePoints);
 public static ResourcesFull GetResourcesState();
 public static int[] GetAttackResources();
-public static IEnumerable<int> DeployUnits(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0);
+public static IEnumerable<int> DeployUnitsInWaves(DeployElement[] units, Point[] deployPoints, int clickDelay = 0, int waveCount = 1, int waveDelay = 0, int firstCycleDelay = 0);
 public static IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[] deployPoints, int unitsPerPoint = 6, int clickDelay = 0, int cycleDelay = 0);
 public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
 ```
