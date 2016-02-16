@@ -162,7 +162,10 @@ Parameter | Description
 --------- | -----------
 BaseStats | An object with the stats of the current target's base. This is passed to your algorithm in the constuctor.
 
+### Examples
+
 ```c#
+// standard method to check a base against a user's settings
 public override double ShouldAccept()
 {
 	if (!MeetsRequirements(BaseStats))
@@ -171,11 +174,8 @@ public override double ShouldAccept()
 }
 ```
 
-### Expanded Example
-
-This is the `ShouldAccept` method for the milking algorithm. After checking if the base meets the user's requirements, it performans another check to make sure there are atleast two collectors outside the walls.
-
 ```c#
+// example method used for milking
 public override double ShouldAccept()
 {
 	// check if the target's base meets the user's settings
@@ -194,8 +194,6 @@ public override double ShouldAccept()
 ```
 
 ## Getting Deploy Points
-
-Deploy points are needed to figure out where to place your troops.
 
 ```c#
 public override IEnumerable<int> AttackRoutine()
@@ -226,6 +224,8 @@ public override IEnumerable<int> AttackRoutine()
 	// [...]
 }
 ```
+
+Deploy points are needed to figure out where to place your troops.
 
 ### Using RedPoints
 
@@ -337,7 +337,7 @@ protected struct ActiveSearch
 	public static bool MeetsRequirements(BaseStats baseStats);
 }
 ```
-#### ActiveSearch Properties
+### ActiveSearch Properties
 
 Name | Type | Description
 ---- | ---- | -----------
@@ -347,7 +347,7 @@ MinElixir | int | Gets the user's setting for the minimum elixir requirement for
 MinDarkElixir | int | Gets the user's setting for the minimum dark elixir requirement for active bases
 MaxThLevel | int | Gets the user's setting for the maximum townhall level requirement for active bases
 
-#### ActiveSearch Methods
+### ActiveSearch Methods
 
 Name | Returns | Description
 ---- | ------- | -----------
@@ -357,6 +357,15 @@ MeetsRequirements(BaseStats) | bool | Determines if the current base meets the a
 
 ```c#
 protected struct DeadSearch
+{
+	public static bool NeedOnlyOneRequirementForAttack { get; }
+	public static int MinGold { get; }
+	public static int MinElixir { get; }
+	public static int MinDarkElixir { get; }
+	public static int MaxThLevel { get; }
+
+	public static bool MeetsRequirements(BaseStats baseStats);
+}
 ```
 
 ### DeadSearch Properties
@@ -369,28 +378,24 @@ MinElixir | int | Gets the user's setting for the minimum elixir requirement for
 MinDarkElixir | int | Gets the user's setting for the minimum dark elixir requirement for dead bases
 MaxThLevel | int | Gets the user's setting for the maximum townhall level requirement for dead bases
 
-```c#
-public static bool NeedOnlyOneRequirementForAttack { get; }
-public static int MinGold { get; }
-public static int MinElixir { get; }
-public static int MinDarkElixir { get; }
-public static int MaxThLevel { get; }
-```
-
 ### DeadSearch Methods
 
 Name | Returns | Description
 ---- | ------- | -----------
 MeetsRequirements(BaseStats) | bool | Determines if the current base meets the dead base requirements
 
-```c#
-public static bool MeetsRequirements(BaseStats baseStats);
-```
-
 ### DeployElementType Structure
 
 ```c#
 protected struct DeployElementType
+{
+	public static Helpers.DeployElementType NormalUnit { get; }
+	public static Helpers.DeployElementType HeroKing { get; }
+	public static Helpers.DeployElementType HeroQueen { get; }
+	public static Helpers.DeployElementType HeroWarden { get; }
+	public static Helpers.DeployElementType Spell { get; }
+	public static Helpers.DeployElementType ClanTroops { get; }
+}
 ```
 
 ### DeployElementType Properties
@@ -404,19 +409,16 @@ HeroWarden | DeployElementType | Gets the DeployElementType enum for HeroWarden
 Spell | DeployElementType | Gets the DeployElementType enum for Spell
 ClanTroops | DeployElementType | Gets the DeployElementType enum for ClanTroops
 
-```c#
-public static Helpers.DeployElementType NormalUnit { get; }
-public static Helpers.DeployElementType HeroKing { get; }
-public static Helpers.DeployElementType HeroQueen { get; }
-public static Helpers.DeployElementType HeroWarden { get; }
-public static Helpers.DeployElementType Spell { get; }
-public static Helpers.DeployElementType ClanTroops { get; }
-```
-
 ### DeployPointA Structure
 
 ```c#
 protected struct DeployPointA
+{
+	public static Point Top { get; }
+	public static Point Left { get; }
+	public static Point Right { get; }
+	public static Point Bottom { get; }
+}
 ```
 
 ### DeployPointA Properties
@@ -428,45 +430,7 @@ Left | Point | Gets the deploy point for the left of the base
 Right | Point | Gets the deploy point for the right of the base
 Bottom | Point | Gets the deploy point for the bottom of the base
 
-```c#
-public static Point Top { get; }
-public static Point Left { get; }
-public static Point Right { get; }
-public static Point Bottom { get; }
-```
-
 ## PluginBase Methods
-
-Name | Returns | Description
----- | ------- | -----------
-MeetsRequirements(BaseStats baseStats) | bool | Determines if the current base meets the requirements based on if it is considered dead or alive
-ToUnitString(List&lt;DeployElement&gt;) | string | Returns a string with the name and count of each unit
-OrderUnitsForDeploy(List&lt;DeployElement&gt;) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
-GetPointsForLine(Point, Point, int) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
-GetRectPoints(int) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current target's base
-GetStorageAttackPoints(List&lt;Point&gt;) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
-ExtractHeroes(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
-DeployHeroes(List&lt;DeployElement&gt;, IEnumerable&lt;Point&gt;,bool) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
-TryActivateHeroAbilities(List&lt;DeployElement&gt;, bool) | void |
-SurrenderDeployMethod() | IEnumerable&lt;int&gt; |
-Surrender() | void |
-SurrenderIfWeHaveAStar() | bool |
-HaveAStar() | bool |
-GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis) | Point[] |
-DrawAnalysis(List&lt;Point&gt;, List&lt;Point&gt;) | void |
-GetAvailableDeployElements() | List&lt;DeployElement&gt; |
-GenerateDeployLinesFromSettings() | Tuple&lt;Point, Point&gt;[] |
-AreTroopSetsDifferent(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | bool |
-ClickAlongLine(Point, Point, int, int) | void |
-CheckForTownhallNearBorder() | TrophyPushOpponentAnalysis |
-GenerateDeployPointsFromMines(List&lt;Point&gt;, IEnumerable&lt;Point&gt;, List&lt;Rectangle&gt;) | IEnumerable&lt;int&gt; |
-GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt;, List&lt;Point&gt;, List&lt;Rectangle&gt;, bool, bool, bool) | IEnumerable&lt;int&gt; |
-GetOutsideCollectorCount(List&lt;Point&gt;) | int |
-GetResourcesState() | ResourcesFull |
-GetAttackResources() | int[] |
-DeployUnitsInWaves(DeployElement[], Point[], int, int, int, int) | IEnumerable&lt;int&gt; |
-DeployUnitsPerPoint(DeployElement[], Point[], int, int, int) | IEnumerable&lt;int&gt; |
-WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
 
 ```c#
 protected bool MeetsRequirements(BaseStats baseStats);
@@ -499,76 +463,96 @@ public static IEnumerable<int> DeployUnitsPerPoint(DeployElement[] units, Point[
 public static IEnumerable<int> WaitForNoResourceChange(double seconds = 3);
 ```
 
-# BaseAttack Class
+Name | Returns | Description
+---- | ------- | -----------
+MeetsRequirements(BaseStats baseStats) | bool | Determines if the current base meets the requirements based on if it is considered dead or alive
+ToUnitString(List&lt;DeployElement&gt;) | string | Returns a string with the name and count of each unit
+OrderUnitsForDeploy(List&lt;DeployElement&gt;) | void | Orders units for deployment; Tank > Wallbreaker > Heal > Damage > Heroes
+GetPointsForLine(Point, Point, int) | List&lt;Point&gt; | Returns a list of points with the specified count along the line created by two specified points
+GetRectPoints(int) | List&lt;Point&gt; | Returns a list of the number of points per side specified along the outside rectangle of the current target's base
+GetStorageAttackPoints(List&lt;Point&gt;) | Point[] | Returns an array of deploy points near storages based on the specified list of red line points
+ExtractHeroes(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | void | Extracts heroes from the specified units list and adds them to the specified heroes list
+DeployHeroes(List&lt;DeployElement&gt;, IEnumerable&lt;Point&gt;,bool) | IEnumerable&lt;int&gt; | Deploys the specified heroes on the specified deploy points.
+TryActivateHeroAbilities(List&lt;DeployElement&gt;, bool) | void |
+SurrenderDeployMethod() | IEnumerable&lt;int&gt; |
+Surrender() | void |
+SurrenderIfWeHaveAStar() | bool |
+HaveAStar() | bool |
+GetTrophyPushDeployPoints(TrophyPushOpponentAnalysis) | Point[] |
+DrawAnalysis(List&lt;Point&gt;, List&lt;Point&gt;) | void |
+GetAvailableDeployElements() | List&lt;DeployElement&gt; |
+GenerateDeployLinesFromSettings() | Tuple&lt;Point, Point&gt;[] |
+AreTroopSetsDifferent(List&lt;DeployElement&gt;, List&lt;DeployElement&gt;) | bool |
+ClickAlongLine(Point, Point, int, int) | void |
+CheckForTownhallNearBorder() | TrophyPushOpponentAnalysis |
+GenerateDeployPointsFromMines(List&lt;Point&gt;, IEnumerable&lt;Point&gt;, List&lt;Rectangle&gt;) | IEnumerable&lt;int&gt; |
+GenerateDeployPointsFromMinesToMilk(List&lt;Point&gt;, List&lt;Point&gt;, List&lt;Rectangle&gt;, bool, bool, bool) | IEnumerable&lt;int&gt; |
+GetOutsideCollectorCount(List&lt;Point&gt;) | int |
+GetResourcesState() | ResourcesFull |
+GetAttackResources() | int[] |
+DeployUnitsInWaves(DeployElement[], Point[], int, int, int, int) | IEnumerable&lt;int&gt; |
+DeployUnitsPerPoint(DeployElement[], Point[], int, int, int) | IEnumerable&lt;int&gt; |
+WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
 
-Your attack algorithm class must implement the `BaseAttack` class.
+# BaseAttack Class
 
 ```c#
 public abstract class BaseAttack : PluginBase, IOpponentSelector, IAttackStrategy
 ```
 
-# BaseAttack Constructors
+Your attack algorithm class must implement the `BaseAttack` class.
 
-Name | Description
----- | -----------
-BaseAttack(BaseStats) | 
+## BaseAttack Constructors
 
 ```c#
 protected BaseAttack(BaseStats baseStats);
 ```
 
-## BaseAttack Fields
+Name | Description
+---- | -----------
+BaseAttack(BaseStats) | 
 
-Name | Type | Description
----- | ---- | -----------
-BaseStats | BaseStats | Holds the stats for the current target's base
+## BaseAttack Fields
 
 ```c#
 protected BaseStats BaseStats;
 ```
 
-## BaseAttack Methods
+Name | Type | Description
+---- | ---- | -----------
+BaseStats | BaseStats | Holds the stats for the current target's base
 
-Name | Returns | Description
----- | ------- | -----------
-ShouldAccept() | double | Determines if the attack algorithm is a good match for the current target's base using a range from 0 to 1
-AttackRoutine() | IEnumerable&lt;int&gt; | Attack routine used on the target's base
+## BaseAttack Methods
 
 ```c#
 public abstract double ShouldAccept();
 public abstract IEnumerable<int> AttackRoutine();
 ```
 
-# BaseStats Class
+Name | Returns | Description
+---- | ------- | -----------
+ShouldAccept() | double | Determines if the attack algorithm is a good match for the current target's base using a range from 0 to 1
+AttackRoutine() | IEnumerable&lt;int&gt; | Attack routine used on the target's base
 
-The `BaseStats` class is used to hold information about the target's base.
+# BaseStats Class
 
 ```c#
 public class BaseStats
 ```
 
-## BaseStats Constuctors
+The `BaseStats` class is used to hold information about the target's base.
 
-Name | Description
----- | -----------
-BaseStats(int) | 
+## BaseStats Constuctors
 
 ```c#
 public static BaseStats CreateBaseStats(int baseDisplayCount);
 ```
 
-## BaseStats Properties
+Name | Description
+---- | -----------
+BaseStats(int) | 
 
-Name | Type | Description
----- | ---- | -----------
-BaseDisplayCount | int | 
-Gold | int | Gets or sets the amount of gold available in the current target's base
-Elixir | int | Gets or sets the amount of elixir available in the current target's base
-DarkElixir | int | Gets or sets the amount of dark elixir available in the current target's base
-Trophies | int | Gets or sets the trophy count of the current target's base
-Th | int | Gets or sets the townhall level of the current target's base
-IsDead | bool | Gets or sets if the current target's base is dead
-IsStrongBase | bool | Determines if the current target's base is strong based on user settings
+## BaseStats Properties
 
 ```c#
 public int BaseDisplayCount { get; private set; }
@@ -581,17 +565,28 @@ public bool IsDead { get; private set; }
 public bool IsStrongBase {  get; }
 ```
 
-## BaseStats Methods
+Name | Type | Description
+---- | ---- | -----------
+BaseDisplayCount | int | 
+Gold | int | Gets or sets the amount of gold available in the current target's base
+Elixir | int | Gets or sets the amount of elixir available in the current target's base
+DarkElixir | int | Gets or sets the amount of dark elixir available in the current target's base
+Trophies | int | Gets or sets the trophy count of the current target's base
+Th | int | Gets or sets the townhall level of the current target's base
+IsDead | bool | Gets or sets if the current target's base is dead
+IsStrongBase | bool | Determines if the current target's base is strong based on user settings
 
-Name | Returns | Description
----- | ------- | -----------
-CreateBaseStats(int) | BaseStats | Returns base stats for the current target's base
-ShouldAcceptCurrentOpponent_StrongBaseCheck() | AttackModule.AcceptOpponentResult | Determines if the current target's base should be accepted based on the user's strong base settings
+## BaseStats Methods
 
 ```c#
 public static BaseStats CreateBaseStats(int baseDisplayCount);
 static AttackModule.AcceptOpponentResult ShouldAcceptCurrentOpponent_StrongBaseCheck();
 ```
+
+Name | Returns | Description
+---- | ------- | -----------
+CreateBaseStats(int) | BaseStats | Returns base stats for the current target's base
+ShouldAcceptCurrentOpponent_StrongBaseCheck() | AttackModule.AcceptOpponentResult | Determines if the current target's base should be accepted based on the user's strong base settings
 
 # InitialAttack Class
 
@@ -601,25 +596,25 @@ internal class InitialAttack : BaseAttack
 
 ## InitalAttack Constuctor
 
-Name | Description
----- | -----------
-InitialAttack(BaseStats) | 
-
 ```c#
 public InitialAttack(BaseStats baseStats);
 ```
 
-## InitalAttack Methods
+Name | Description
+---- | -----------
+InitialAttack(BaseStats) | 
 
-Name | Returns | Description
----- | ------- | -----------
-ShouldAccept() | double | Not implemented
-AttackRoutine() | IEnumerable&lt;int&gt; | Deploys an initial attack based on the user's settings
+## InitalAttack Methods
 
 ```c#
 public override double ShouldAccept();
 public override IEnumerable<int> AttackRoutine()
 ```
+
+Name | Returns | Description
+---- | ------- | -----------
+ShouldAccept() | double | Not implemented
+AttackRoutine() | IEnumerable&lt;int&gt; | Deploys an initial attack based on the user's settings
 
 ## InitialAttack Example
 
