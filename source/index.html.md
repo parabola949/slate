@@ -32,11 +32,12 @@ In order for your addon to be picked up by the bot, you must include the Addon a
 
 ### Contructor
 
-`assembly: Addon(string addOnName, string description, string author)`
-
 ```c#
 [assembly: Addon("Nameof Addon", "This is a sample addon", "BoostBotTeam")]
 ```
+
+`assembly: Addon(string addOnName, string description, string author)`
+
 ### Parameters
 Parameter | Description
 --------- | ------- 
@@ -48,18 +49,17 @@ author | You!
 Remember — this is NOT a description of your algorithm, just your addon
 </aside>
 
-
 ## AttackAlgorithm
 
 For each algorithm, you must in include the AttackAlgorithm Attribute on your class
 
 ### Constructor
 
-`AttackAlgorithm(string name, string description)`
-
 ```c#
 [AttackAlgorithm("MyDeploy", "Deploys units in a smiley face pattern.")]
 ```
+
+`AttackAlgorithm(string name, string description)`
 
 ### Parameters
 
@@ -78,16 +78,13 @@ When implementing BaseAttack, add the following methods
 
 ## Initial Constructor
 
-
-Your BaseAttack class will accept a <code>BaseStats</code> parameter.
-
 ```c#
 public class MyAlgorithm(BaseStats baseStats): base(baseStats){}
 ```
 
-## ToString
+Your BaseAttack class will accept a <code>BaseStats</code> parameter.
 
-This returns the name of your deployment. This is used to display the name that appears in "Attack" tab of the bot.
+## ToString
 
 ```c#
 public override string ToString()
@@ -95,6 +92,8 @@ public override string ToString()
 	return "My deploy algorithm"
 }
 ```
+
+This returns the name of your deployment. This is used to display the name that appears in "Attack" tab of the bot.
 
 ## ShouldAccept
 
@@ -109,6 +108,7 @@ The <code>ShouldAccept</code> method returns a double, which is the score of how
 This is your actual attack / deploy phase. It returns an int which is the number of milliseconds the bot should allow for this routine.
 
 ## Sample initial Setup
+
 ```c#
 [assembly: Addon("My Addon", "This is a sample addon", "BoostBotTeam")]
 namespace MyDeploy
@@ -237,7 +237,7 @@ The `RedPoints` property will get a list with all points the go around the targe
 
 ### Getting Units
 
-> get the deployelements and break them up into groups to use for deployment
+> get the deploy elements and break them up into groups to use for deployment
 	
 ```c#
 //get the deploy elements that have unit data
@@ -258,7 +258,7 @@ var healUnits = deployElements.Where(x => x.ElementType == DeployElementType.Nor
 
 ## Deploying units
 
-> Deploy 5 normal units at each deploy point with a 100ms click delay and 1000ms delay between points then wait 1000ms
+> deploy 5 normal units at each deploy point with a 100ms click delay and 1000ms delay between points then wait 1000ms
 
 ```c#
 if (attackUnits.Any())
@@ -269,7 +269,7 @@ if (attackUnits.Any())
 }
 ```
 
-> Deploy 3 waves of normal units with a 100ms click delay and 1000ms between waves then wait 1000ms
+> deploy 3 waves of normal units with a 100ms click delay and 1000ms between waves then wait 1000ms
 
 ```c#
 if (attackUnits.Any())
