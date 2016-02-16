@@ -197,14 +197,6 @@ public override double ShouldAccept()
 
 Deploy points are needed to figure out where to place your troops.
 
-### Using RedPoints
-
-The `RedPoints` property will get a list with all points the go around the target's base following the red line.
-
-### Example Methods
-
-Here are some examples of how to get deploy points. More methods can be found in the `PluginBase` and `DeployHelper` class documentation.
-
 ```c#
 public override IEnumerable<int> AttackRoutine()
 {
@@ -234,6 +226,14 @@ public override IEnumerable<int> AttackRoutine()
 	// [...]
 }
 ```
+
+### Using RedPoints
+
+The `RedPoints` property will get a list with all points the go around the target's base following the red line.
+
+### Example Methods
+
+Here are some examples of how to get deploy points. More methods can be found in the `PluginBase` and `DeployHelper` class documentation.
 
 ## Getting Units
 
