@@ -146,26 +146,13 @@ namespace MyDeploy
 
 # Getting Started
 
-Use these methods to get started with an attack.
+Use these examples to get started with an attack.
 
-## Checking a Base
+## ShouldAccept
 
-### Using MeetsRequirements
-
-```c#
-protected bool MeetsRequirements(BaseStats baseStats);
-```
-
-This method is used to check if the base the bot is currently on meets the requirements set by the user on the "Attack" tab. Use it in the `ShouldAccept` method.
-
-Parameter | Description
---------- | -----------
-BaseStats | An object with the stats of the current target's base. This is passed to your algorithm in the constuctor.
-
-### Examples
+> standard method to check a base against a user's settings
 
 ```c#
-// standard method to check a base against a user's settings
 public override double ShouldAccept()
 {
 	if (!MeetsRequirements(BaseStats))
@@ -174,8 +161,9 @@ public override double ShouldAccept()
 }
 ```
 
+> example method used for milking
+
 ```c#
-// example method used for milking
 public override double ShouldAccept()
 {
 	// check if the target's base meets the user's settings
@@ -193,7 +181,28 @@ public override double ShouldAccept()
 }
 ```
 
-## Getting Deploy Points
+`ShouldAccept` is ran on each target base. When a value above 0 is returned. The base is accepted and `AttackRoutine` will be executed.
+
+Use `MeetsRequirements(BaseStats)` to determine if the current base meets the requirements defined by the user's settings.
+
+## AttackRoutine
+
+```c#
+public override IEnumerable<int> AttackRoutine()
+{
+	yield return 1000;
+}
+```
+
+`AttackRoutine` holds all the logic for your actual attack. The standard pattern to attacking uses these steps.
+
+1. Get deploy points
+2. Get available units to deploy
+3. Deploy units
+
+`AttackRoutine` returns	`IEnumberable<int>`. When you want the bot to pause for a certain amount of milliseconds, use `yield return` followed by the time.
+
+### Getting Deploy Points
 
 > get deployment points from the outer rectangle—15 points per side
 
@@ -223,26 +232,12 @@ foreach(var t in GenerateDeployPointsFromMines(deployPointsNearCollectors, RedPo
 	yield return t; // wait until function finishes
 ```
 
-Deploy points are needed to figure out where to place your troops. This code should be part of the `AttackRoutine` method.
-
-### Using RedPoints
+Deploy points are needed to figure out where to place your troops. In the code section are some examples of how to get deploy points. More methods can be found in the `PluginBase` and `DeployHelper` class documentation.
 
 The `RedPoints` property will get a list with all points the go around the target's base following the red line.
 
-### Example Methods
-
-Here are some examples of how to get deploy points. More methods can be found in the `PluginBase` and `DeployHelper` class documentation.
-
-## Getting Units
-
-### Using GetAvailableDeployElements
-
-```c#
-public static List<DeployElement> GetAvailableDeployElements();
-```
-
-This method returns a list of the troops and spells currently available to deploy using the DeployElement object. Use it in the `AttackRoutine` method.
-
+### Getting Units
+	
 ```c#
 public override IEnumerable<int> AttackRoutine()
 {
@@ -263,9 +258,36 @@ public override IEnumerable<int> AttackRoutine()
 }
 ```
 
+`GetAvailableDeployElements` returns a list of the troops and spells currently available to deploy using the DeployElement object. You can use `linq` to filter this list into certain troops.
+
+
 ## Deploying units
 
+> Deploy 5 normal units at each deploy point with a 100ms click delay and 1000ms delay between points then wait 1000ms
 
+```c#
+if (attackUnits.Any())
+{
+    foreach (var t in DeployUnitsPerPoint(attackUnits, _deployPoints, 5, 100, 1000))
+        yield return t;
+    yield return 1000;
+}
+```
+
+> Deploy 3 waves of normal units with a 100ms click delay and 1000ms between waves then wait 1000ms
+
+```c#
+if (attackUnits.Any())
+{
+    foreach (var t in DeployUnitsInWaves(attackUnits, _deployPoints, 100, 3, 1000))
+        yield return t;
+    yield return 1000;
+}
+```
+
+## Surrendering Early
+
+## Using Heroes
 
 # PluginBase Class
 
