@@ -196,36 +196,27 @@ public override double ShouldAccept()
 ## Getting Deploy Points
 
 ```c#
-public override IEnumerable<int> AttackRoutine()
+> get deployment points from the outer rectangle—15 points per side
+var deployPointsRect = GetRectPoints(15);
+
+> get deploy points near the townhall if it is close to the edge
+TrophyPushOpponentAnalysis trophyPushAnalysis = CheckForTownhallNearBorder();
+Point[] deployPointsNearTownhall = null;
+
+if (IsTownhallNearBorder(trophyPushAnalysis))
 {
-	> get deployment points from the outer rectangle—15 points per side
-	var deployPointsRect = GetRectPoints(15);
-
-	> get deploy points near the townhall if it is close to the edge
-	TrophyPushOpponentAnalysis trophyPushAnalysis = CheckForTownhallNearBorder();
-    Point[] deployPointsNearTownhall = null;
-
-    if (IsTownhallNearBorder(trophyPushAnalysis))
-    {
-        deployPointsNearTownhall = GetTrophyPushDeployPoints(trophyPushAnalysis);
-    }
-
-	> get deploy points near collectors
-	var deployPointsNearCollectors = new List<Point>();
-	var mineRects = new List<Rectangle>();
-
-	foreach(var t in GenerateDeployPointsFromMines(deployPointsNearCollectors, RedPoints, , mineRects))
-		yield return t; // wait until function finishes
-
-	// get troops
-	// [...]
-
-	// deploy troops
-	// [...]
+    deployPointsNearTownhall = GetTrophyPushDeployPoints(trophyPushAnalysis);
 }
+
+> get deploy points near collectors
+var deployPointsNearCollectors = new List<Point>();
+var mineRects = new List<Rectangle>();
+
+foreach(var t in GenerateDeployPointsFromMines(deployPointsNearCollectors, RedPoints, , mineRects))
+	yield return t; // wait until function finishes
 ```
 
-Deploy points are needed to figure out where to place your troops.
+Deploy points are needed to figure out where to place your troops. This code should be part of the `AttackRoutine` method.
 
 ### Using RedPoints
 
