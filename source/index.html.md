@@ -195,11 +195,15 @@ public override double ShouldAccept()
 
 ## Getting Deploy Points
 
-```c#
 > get deployment points from the outer rectangle—15 points per side
+
+```c#
 var deployPointsRect = GetRectPoints(15);
+```
 
 > get deploy points near the townhall if it is close to the edge
+
+```c#
 TrophyPushOpponentAnalysis trophyPushAnalysis = CheckForTownhallNearBorder();
 Point[] deployPointsNearTownhall = null;
 
@@ -207,8 +211,11 @@ if (IsTownhallNearBorder(trophyPushAnalysis))
 {
     deployPointsNearTownhall = GetTrophyPushDeployPoints(trophyPushAnalysis);
 }
+```
 
 > get deploy points near collectors
+
+```c#
 var deployPointsNearCollectors = new List<Point>();
 var mineRects = new List<Rectangle>();
 
