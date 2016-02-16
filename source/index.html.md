@@ -171,7 +171,7 @@ public override double ShouldAccept()
 }
 ```
 
-#### Expanded Example
+### Expanded Example
 
 This is the `ShouldAccept` method for the milking algorithm. After checking if the base meets the user's requirements, it performans another check to make sure there are atleast two collectors outside the walls.
 
@@ -329,7 +329,7 @@ protected static int BottomEnd { get; }
 protected struct ActiveSearch
 ```
 
-#### ActiveSearch Properties
+### ActiveSearch Properties
 
 Name | Type | Description
 ---- | ---- | -----------
@@ -347,7 +347,7 @@ public static int MinDarkElixir { get; }
 public static int MaxThLevel { get; }
 ```
 
-#### ActiveSearch Methods
+### ActiveSearch Methods
 
 Name | Returns | Description
 ---- | ------- | -----------
@@ -363,7 +363,7 @@ public static bool MeetsRequirements(BaseStats baseStats);
 protected struct DeadSearch
 ```
 
-#### DeadSearch Properties
+### DeadSearch Properties
 
 Name | Type | Description
 ---- | ---- | -----------
@@ -381,7 +381,7 @@ public static int MinDarkElixir { get; }
 public static int MaxThLevel { get; }
 ```
 
-#### DeadSearch Methods
+### DeadSearch Methods
 
 Name | Returns | Description
 ---- | ------- | -----------
@@ -397,7 +397,7 @@ public static bool MeetsRequirements(BaseStats baseStats);
 protected struct DeployElementType
 ```
 
-#### DeployElementType Properties
+### DeployElementType Properties
 
 Name | Type | Description
 ---- | ---- | -----------
@@ -423,7 +423,7 @@ public static Helpers.DeployElementType ClanTroops { get; }
 protected struct DeployPointA
 ```
 
-#### DeployPointA Properties
+### DeployPointA Properties
 
 Name | Type | Description
 ---- | ---- | -----------
