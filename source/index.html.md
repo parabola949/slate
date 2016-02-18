@@ -40,7 +40,8 @@ See the information below for how thats done.
 
 ## Addon
 
-In order for your addon to be picked up by the bot, you must include the Addon attribute on your namespace
+In order for your addon to be picked up by the bot, you must include the Addon attribute in the assembly namespace.
+The class you define must also inherit from BaseAttack and have a special attribute (AttackAlgorithm)
 
 ### Contructor
 
