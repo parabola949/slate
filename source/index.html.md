@@ -46,15 +46,15 @@ The class you define must also inherit from BaseAttack and have a special attrib
 ### Contructor
 
 ```c#
-[assembly: Addon("Nameof Addon", "This is a sample addon", "BoostBotTeam")]
+[assembly: Addon("Nameof Addon", "This is a sample addon", "BoostBot Team")]
 ```
 
-`assembly: Addon(string addOnName, string description, string author)`
+`assembly: Addon(string addonName, string description, string author)`
 
 ### Parameters
 Parameter | Description
 --------- | ------- 
-addOnName | Name of your addon 
+addonName | Name of your addon 
 description | A short description of your addon
 author | You!
 
@@ -97,12 +97,15 @@ public class MyAlgorithm(BaseStats baseStats): base(baseStats){}
 
 Your BaseAttack class will accept a <code>BaseStats</code> parameter.
 
+BaseStats is a class that contains various settings from the user,
+as well as the current Gold/Elixir/DarkElixir the base which is being attacked has.
+
 ## ToString
 
 ```c#
 public override string ToString()
 {
-	return "My deploy algorithm"
+	return "My deploy algorithm";
 }
 ```
 
@@ -241,7 +244,9 @@ var deployPointsNearCollectors = new List<Point>();
 var mineRects = new List<Rectangle>();
 
 foreach(var t in GenerateDeployPointsFromMines(deployPointsNearCollectors, RedPoints, , mineRects))
-	yield return t; // wait until function finishes
+	// wait until function finishes
+	// do not return 0 here! always return what the function you're calling returns!
+	yield return t; 
 ```
 
 Deploy points are needed to figure out where to place your troops. In the code section are some examples of how to get deploy points. More methods can be found in the `PluginBase` and `DeployHelper` class documentation.
