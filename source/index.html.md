@@ -14,15 +14,27 @@ search: true
 
 # Introduction
 
-Welcome to the Boostbot API documentation page.  blah blah blah some stuff here
+Welcome to the Boostbot API documentation page.
+This website is intended for programmers with at least a basic understanding of how to use VisualStudio and C#.
+If you never used C# or any programming language before, learn that first and come back later.
 
 # Project Setup
 
-Create a new project of type <code>Class Library</code> (dll)
-
-## References
+Create a new project of type <code>Class Library</code> (.dll).
 
 You will need to reference the boostbot application (.exe), Core.dll, and Shared.dll.  All of these can be found in the bots main folder.
+The two example projects inside the bots <code>addons</code> folder already contains completely projects which are used in the bot already;
+so you can use these as a guide as well.
+
+Obviously, it's also possible to just copy-paste one of the existing projects and rename everything.
+
+After you added the references add the needed namespaces to your <code>.cs</code> file.
+
+In order for the bot to be able to load the dll you'll eventually compile, it needs a few special attributes and your
+class which describes your addon will have to implement <code>BaseAttack</code>
+
+See the information below for how thats done.
+
 
 # Addon Attributes
 
