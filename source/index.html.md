@@ -801,13 +801,9 @@ TrainingTime | double | Length of time to train
 Type | ItemType | Type of item: Unit, Spell
 UnitType | UnitType | Type of unit: Ground, Air
 
-# API Helpers
-
-## CoC_Bot.Buildings
-
-## CoC_Bot.Visualize
-
-### Visualize Methods
+# CoC_Bot.Visualize
+The Visualize class exists to draw on Bitmaps, helping you to properly visualize what the bot is seeing, or to draw new items on the screen
+## Visualize Methods
 ```c#
 public static void Grid(Bitmap bmp, Color? color = null, bool redZone = true)
 public static void GridFromPoints(Bitmap bmp, Color? color = null, float size = 2, bool redZone = true)
@@ -830,9 +826,9 @@ Rectangle(Bitmap, Rectangle, Pen, Brush, bool, string, Font) | void | Draws and/
 Crosshair(Bitmap, Point, int, Color?) | void | Draws a one pixel crosshair at the specified location.
 Coverage(Bitmap, RangedBuilding, Color?) | void | Draws a coverage indicator for the specified RangedBuilding
 
-## CoC_Bot.GameGrid
+# CoC_Bot.GameGrid
 
-### GameGrid Properties
+## GameGrid Properties
 ```c#
 public const int TilesX
 public const int TilesY
@@ -844,7 +840,7 @@ TilesX | int | "Horizontal" (the / diagonal) size of the game grid, in tiles.
 TilesY | int | "Vertical" (the \ diagonal) size of the game grid, in tiles.
 RedPoints | PointFT | Accesses the red zone information for the current base.
 
-### GameGrid Methods
+## GameGrid Methods
 ```c#
 public static void ClearCache()
 ```
@@ -852,11 +848,11 @@ Name | Returns | Description
 ---- | ------- | -----------
 ClearCache() | void | Clears the red zone cache
 
-## CoC_Bot.GameGrid.RedZoneExtents
+# CoC_Bot.GameGrid.RedZoneExtents
 <aside class="notice">
 RedZoneExtents is an advanced class, it is highly recommended to use PointFT instead.
 </aside>
-### RedZoneExtents Properties
+## RedZoneExtents Properties
 ```c#
 public const int TilesX
 public const int TilesY
@@ -878,9 +874,9 @@ L | float | Left absolute (pixel) coordinates of the game grid's red zone.
 R | float | Right absolute (pixel) coordinates of the game grid's red zone.
 C | float | Center (horizontal) absolute (pixel) coordinates of the game grid's red zone.
 
-## CoC_Bot.GameGrid.RedZoneI
+# CoC_Bot.GameGrid.RedZoneI
 
-### RedZoneI Constructor
+## RedZoneI Constructor
 ```c#
 public RedZoneI()
 ```
@@ -888,16 +884,95 @@ Name | Description
 ---- | -----------
 RedZoneI() | Constructor. Populates a new RedZone object based on the current screen.
 
-### RedZoneI Properties
+## RedZoneI Properties
 ```c#
 public GridState this[int x, int y]
 public GridState this[PointFT pft] 
 ```
 Use these two properties to get the state of the red zone at the given coordinates.
-### GridState enum
+## GridState enum
 ```c#
 Unknown = 0, Red, Green
 ```
 Enumeration indicating whether troops can be deployed on the specified tile.  Unknown signifies that it is uncertain whether troops can be deployed on a given tile.
+
+# CoC_Bot.Buildings
+
+## Buildinds.Building
+This is the absolute base Building class, from which all other buildings inherit.
+### Properties
+```c#
+public Rectangle MatchedRectangle
+public Definition Definition
+public RectangleT Location
+public int? Level
+public int? MaxHitPoints
+```
+Name | Type | Description
+---- | ---- | -----------
+MatchedRectangle | Rectangle | Screen rectangle that matched the definition.
+Definition | Definition | Name of the definition that matched this building.
+Location | RectangleT | Location of this building.
+Level | int? | Level of this building.
+MaxHitPoints | int? | Number of hitpoints this building started with.
+
+### Building Methods
+```c#
+protected static TBuilding[] Find<TBuilding>(CacheBehavior behavior = CacheBehavior.Default, int? minLevel = null, int? maxLevel = null, int? stopAfter = null, byte width = 3, byte height = 3)
+public static void ClearCache()
+```
+Name | Returns | Description
+---- | ------- | -----------
+Find(CacheBehavior, int?, int?, int?, byte, byte) | TBuilding[] | Convenience method that handles caching, level checking, etc. to make it easy to implement Find and FindAll in subtypes. Logs a warning or debug message and returns an empty array when it encounters a situation that won't return results.
+ClearCache() | void | Clears the building Cache.
+
+## Buildings.RangedBuilding
+Inherits Building
+Parent type for an offensive building that has a ranged attack.  
+### Properties
+```c#
+public int MinRange
+public int MaxRange
+public virtual bool InRange(PointFT pft)
+```
+Name | Type | Description
+---- | ---- | -----------
+MinRange | int | Minimum attack range, in tile units.
+MaxRange | int | Maximum attack range, in tile units.
+InRange(PointFT) | bool | Determines whether the specified point lies within this building's range.
+
+## Buildings.DirectionalBuilding
+Inherits RangedBuilding
+Parent type for an offensive building that has a direction associated with it.  
+<aside class="alert">The property InRange for Directional Buildings has not been implemented at the time of this writing</aside>
+### Properties
+```c#
+public int? Direction
+public int? Sweep
+```
+Name | Type | Description
+---- | ---- | -----------
+Direction | int? | Direction this building is facing, in degrees from horizontal on the tile grid. For example, 0 is NE on screen, 45 is N on screen, 225 is S on screen, etc.
+Sweep | int? | Total number of degrees covered by this building, with Direction at the center. So a Sweep of 90 covers 45 degrees on either side of Direction.
+
+## Building Classes
+Name | Inherits | Additional Properties
+---- | -------- | ---------------------
+AirSweeper | DirectionalBuilding
+ArcherQueen | Building | bool Sleeping - whether or not hero is sleeping
+ArcherTower | RangedBuilding | 
+BarbarianKing | Building | bool Sleeping - whether or not hero is sleeping
+ClanCastle | Building | 
+DarkElixirDrill | Building | 
+DarkElixirStorage | Building | 
+ElixirCollector | Building | 
+ElixirStorage | Building | 
+GoldMine | Building | 
+GoldStorage | Building | 
+GrandWarden | Building | bool Sleeping - whether or not hero is sleeping
+HiddenTesla | RangedBuilding | 
+InfernoTower | RangedBuilding | 
+TownHall | Building | 
+WizardTower | RangedBuilding | 
 
 
