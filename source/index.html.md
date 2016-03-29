@@ -527,7 +527,9 @@ DeployUnitsInWaves(DeployElement[], Point[], int, int, int, int) | IEnumerable&l
 DeployUnitsPerPoint(DeployElement[], Point[], int, int, int) | IEnumerable&lt;int&gt; |
 WaitForNoResourceChange(double) | IEnumerable&lt;int&gt; |
 
-# BaseAttack Class
+# Base Classes
+
+## BaseAttack Class
 
 ```c#
 public abstract class BaseAttack : PluginBase, IOpponentSelector, IAttackStrategy
@@ -535,7 +537,7 @@ public abstract class BaseAttack : PluginBase, IOpponentSelector, IAttackStrateg
 
 Your attack algorithm class must implement the `BaseAttack` class.
 
-## BaseAttack Constructors
+### BaseAttack Constructors
 
 ```c#
 protected BaseAttack(BaseStats baseStats);
@@ -545,7 +547,7 @@ Name | Description
 ---- | -----------
 BaseAttack(BaseStats) | 
 
-## BaseAttack Fields
+### BaseAttack Fields
 
 ```c#
 protected BaseStats BaseStats;
@@ -555,7 +557,7 @@ Name | Type | Description
 ---- | ---- | -----------
 BaseStats | BaseStats | Holds the stats for the current target's base
 
-## BaseAttack Methods
+### BaseAttack Methods
 
 ```c#
 public abstract double ShouldAccept();
@@ -567,7 +569,7 @@ Name | Returns | Description
 ShouldAccept() | double | Determines if the attack algorithm is a good match for the current target's base using a range from 0 to 1
 AttackRoutine() | IEnumerable&lt;int&gt; | Attack routine used on the target's base
 
-# BaseStats Class
+## BaseStats Class
 
 ```c#
 public class BaseStats
@@ -575,7 +577,7 @@ public class BaseStats
 
 The `BaseStats` class is used to hold information about the target's base.
 
-## BaseStats Constuctors
+### BaseStats Constuctors
 
 ```c#
 public static BaseStats CreateBaseStats(int baseDisplayCount);
@@ -585,7 +587,7 @@ Name | Description
 ---- | -----------
 BaseStats(int) | 
 
-## BaseStats Properties
+### BaseStats Properties
 
 ```c#
 public int BaseDisplayCount { get; private set; }
@@ -609,7 +611,7 @@ Th | int | Gets or sets the townhall level of the current target's base
 IsDead | bool | Gets or sets if the current target's base is dead
 IsStrongBase | bool | Determines if the current target's base is strong based on user settings
 
-## BaseStats Methods
+### BaseStats Methods
 
 ```c#
 public static BaseStats CreateBaseStats(int baseDisplayCount);
@@ -621,13 +623,15 @@ Name | Returns | Description
 CreateBaseStats(int) | BaseStats | Returns base stats for the current target's base
 ShouldAcceptCurrentOpponent_StrongBaseCheck() | AttackModule.AcceptOpponentResult | Determines if the current target's base should be accepted based on the user's strong base settings
 
-# InitialAttack Class
+# Attack Classes
+
+## InitialAttack Class
 
 ```c#
 internal class InitialAttack : BaseAttack
 ```
 
-## InitalAttack Constuctor
+### InitalAttack Constuctor
 
 ```c#
 public InitialAttack(BaseStats baseStats);
@@ -637,7 +641,7 @@ Name | Description
 ---- | -----------
 InitialAttack(BaseStats) | 
 
-## InitalAttack Methods
+### InitalAttack Methods
 
 ```c#
 public override double ShouldAccept();
@@ -649,7 +653,7 @@ Name | Returns | Description
 ShouldAccept() | double | Not implemented
 AttackRoutine() | IEnumerable&lt;int&gt; | Deploys an initial attack based on the user's settings
 
-## InitialAttack Example
+### InitialAttack Example
 
 ```c#
 // your algorithm's attack routine
@@ -667,17 +671,19 @@ public override IEnumerable<int> AttackRoutine()
 }
 ```
 
-# AttackHelper Class
+## AttackHelper Class
 
 Under Construction
 
-# DeployHelper Class
+# Deploy Classes
+
+## DeployHelper Class
 
 Under Construction
 
-# DeployElement Class
+## DeployElement Class
 
-## DeployElement Fields
+### DeployElement Fields
 
 ```c#
 public string Name;
@@ -695,7 +701,7 @@ Count | int | The number of available elements
 UnitData | Unit | An object with information about the unit
 ElementType | DeployElementType | The type of element; Elements types are: NormalUnit, HeroKing, HeroQueen, HeroWarden, Spell, ClanTroops
 
-## DeployElement Properties
+### DeployElement Properties
 
 ```c#
 public bool IsRanged { get; }
@@ -707,7 +713,7 @@ Name | Type | Description
 IsRanged | bool | Determines if the element is a ranged unit.
 IsHero | bool | Determines if the element is a hero.
 
-## DeployElement Methods
+### DeployElement Methods
 
 ```c#
 public void Recount();
@@ -794,3 +800,104 @@ TrainingButton | Point | Location of the training button on the screen
 TrainingTime | double | Length of time to train
 Type | ItemType | Type of item: Unit, Spell
 UnitType | UnitType | Type of unit: Ground, Air
+
+# API Helpers
+
+## CoC_Bot.Buildings
+
+## CoC_Bot.Visualize
+
+### Visualize Methods
+```c#
+public static void Grid(Bitmap bmp, Color? color = null, bool redZone = true)
+public static void GridFromPoints(Bitmap bmp, Color? color = null, float size = 2, bool redZone = true)
+public static void Axes(Bitmap bmp, Color? color = null)
+public static void Target(Bitmap bmp, PointFT location, int size = 50, Color? color = null)
+public static void RectangleT(Bitmap bmp, RectangleT rectangle, Pen outline = null, Brush fill = null)
+public static void Rectangle(Bitmap bmp, Rectangle rectangle, Pen outline = null, Brush fill = null, bool center = true, string caption = null, Font captionFont = null)
+public static void Crosshair(Bitmap bmp, Point point, int size = 41, Color? color = null)
+public static void Coverage(Bitmap bmp, RangedBuilding building, Color? color = null)
+```
+
+Name | Returns | Description
+---- | ------- | -----------
+Grid(Bitmap, Color?, bool) | void | Draws a grid (lines) over the entire game area or red zone on the supplied bitmap.
+GridFromPoints(Bitmap, Color?, float, bool) | void | Draws a grid (dots) over the entire game area or red zone on the supplied bitmap.
+Axes(Bitmap, Color?) | void | Draws a set of axes over the game area, centered on the origin.
+Target(Bitmap, PointFT, int, Color?) | void | Draws a target at the specified PointFT.
+RectangleT(Bitmap, RectangleT, Pen, Brush) | void | Draws and/or fills the specified RectangleT structure on the bitmap.
+Rectangle(Bitmap, Rectangle, Pen, Brush, bool, string, Font) | void | Draws and/or fills a rectangle (in absolute screen coordinates) on the bitmap.
+Crosshair(Bitmap, Point, int, Color?) | void | Draws a one pixel crosshair at the specified location.
+Coverage(Bitmap, RangedBuilding, Color?) | void | Draws a coverage indicator for the specified RangedBuilding
+
+## CoC_Bot.GameGrid
+
+### GameGrid Properties
+```c#
+public const int TilesX
+public const int TilesY
+public static PointFT[] RedPoints
+```
+Name | Type | Description
+---- | ---- | -----------
+TilesX | int | "Horizontal" (the / diagonal) size of the game grid, in tiles.
+TilesY | int | "Vertical" (the \ diagonal) size of the game grid, in tiles.
+RedPoints | PointFT | Accesses the red zone information for the current base.
+
+### GameGrid Methods
+```c#
+public static void ClearCache()
+```
+Name | Returns | Description
+---- | ------- | -----------
+ClearCache() | void | Clears the red zone cache
+
+## CoC_Bot.GameGrid.RedZoneExtents
+<aside class="notice">
+RedZoneExtents is an advanced class, it is highly recommended to use PointFT instead.
+</aside>
+### RedZoneExtents Properties
+```c#
+public const int TilesX
+public const int TilesY
+public const float T
+public const float B
+public const float M
+public const float L
+public const float R
+public const float C
+```
+Name | Type | Description
+---- | ---- | -----------
+TilesX | int | "Horizontal" (the / diagonal) size of the game grid, in tiles.
+TilesY | int | "Vertical" (the \ diagonal) size of the game grid, in tiles.
+T | float | Top absolute (pixel) coordinates of the game grid's red zone.
+B | float | Bottom absolute (pixel) coordinates of the game grid's red zone.
+M | float | Middle (vertical) absolute (pixel) coordinates of the game grid's red zone.
+L | float | Left absolute (pixel) coordinates of the game grid's red zone.
+R | float | Right absolute (pixel) coordinates of the game grid's red zone.
+C | float | Center (horizontal) absolute (pixel) coordinates of the game grid's red zone.
+
+## CoC_Bot.GameGrid.RedZoneI
+
+### RedZoneI Constructor
+```c#
+public RedZoneI()
+```
+Name | Description
+---- | -----------
+RedZoneI() | Constructor. Populates a new RedZone object based on the current screen.
+
+### RedZoneI Properties
+```c#
+public GridState this[int x, int y]
+public GridState this[PointFT pft] 
+```
+Use these two properties to get the state of the red zone at the given coordinates.
+### GridState enum
+```c#
+Unknown = 0, Red, Green
+```
+Enumeration indicating whether troops can be deployed on the specified tile.  Unknown signifies that it is uncertain whether troops can be deployed on a given tile.
+
+
